@@ -34,6 +34,16 @@
         .back-btn:hover, .fullscreen-btn:hover {
             background: rgba(255,100,0,0.2);
         }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,100,0,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -41,6 +51,7 @@
         <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
     </div>
+    <div class="watermark">GolubevOG</div>
     <canvas id="canvas"></canvas>
     <script src="script.js"></script>
 </body>
