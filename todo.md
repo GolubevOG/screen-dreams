@@ -19,7 +19,7 @@
 
 ---
 
-## 🎨 Список скринсейверов (17 штук)
+## 🎨 Список скринсейверов (22 штуки)
 
 | # | Название | Описание | Технология | Файл |
 |---|----------|----------|------------|------|
@@ -40,6 +40,11 @@
 | 15 | Pulse | Пульсирующие цветные круги | CSS | screensavers/pulse/ |
 | 16 | DNA | Двойная спираль ДНК | Canvas 2D | screensavers/dna/ |
 | 17 | Galaxy | Вращающаяся спиральная галактика | Three.js (WebGL) | screensavers/galaxy/ |
+| 18 | Bubbles | Мыльные пузыри, поднимающиеся вверх | Canvas 2D | screensavers/bubbles/ |
+| 19 | Lightning | Молнии, бьющие в ночном небе | Canvas 2D | screensavers/lightning/ |
+| 20 | Stars | Мерцающие звёзды на тёмном небе | CSS | screensavers/stars/ |
+| 21 | Waves | Абстрактные волны с частицами | Canvas 2D | screensavers/waves/ |
+| 22 | Circle | Вращающиеся разноцветные круги | CSS | screensavers/circle/ |
 
 ---
 
@@ -74,7 +79,12 @@ screen-dreams/
 │   ├── maze/
 │   ├── pulse/
 │   ├── dna/
-│   └── galaxy/
+│   ├── galaxy/
+│   ├── bubbles/
+│   ├── lightning/
+│   ├── stars/
+│   ├── waves/
+│   └── circle/
 └── README.md
 ```
 
@@ -95,7 +105,7 @@ screen-dreams/
 - [x] Реализовать кнопку "Полный экран"
 - [x] Добавить обработку клавиши Escape
 
-### Этап 3: Скринсейверы (17 штук)
+### Этап 3: Скринсейверы (22 штуки)
 - [x] **Matrix** — Canvas 2D (падающие символы)
 - [x] **Particles** — Canvas 2D (интерактивные частицы)
 - [x] **Starfield** — Three.js (3D звёзды)
@@ -113,6 +123,11 @@ screen-dreams/
 - [x] **Pulse** — CSS (пульсирующие круги)
 - [x] **DNA** — Canvas 2D (двойная спираль ДНК)
 - [x] **Galaxy** — Three.js (вращающаяся галактика)
+- [x] **Bubbles** — Canvas 2D (мыльные пузыри)
+- [x] **Lightning** — Canvas 2D (молнии)
+- [x] **Stars** — CSS (мерцающие звёзды)
+- [x] **Waves** — Canvas 2D (абстрактные волны)
+- [x] **Circle** — CSS (вращающиеся круги)
 
 ### Этап 4: Превью и финализация
 - [x] Создать скриншоты/превью для каждого скринсейвера (автоматические превью в gallery.js)
