@@ -62,6 +62,96 @@
       "path": "screensavers/fire/",
       "tags": ["fire", "flame", "warm"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "nebula",
+      "name": "Nebula",
+      "description": "Цветная туманность с мерцающими частицами",
+      "preview": "images/previews/nebula.png",
+      "path": "screensavers/nebula/",
+      "tags": ["nebula", "space", "particles"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "lava",
+      "name": "Lava",
+      "description": "Раскалённая лава с поднимающимися пузырьками",
+      "preview": "images/previews/lava.png",
+      "path": "screensavers/lava/",
+      "tags": ["lava", "fire", "hot"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean",
+      "description": "Спокойные волны океана с пузырьками",
+      "preview": "images/previews/ocean.png",
+      "path": "screensavers/ocean/",
+      "tags": ["ocean", "water", "waves"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "description": "Северное сияние с мерцающими звёздами",
+      "preview": "images/previews/aurora.png",
+      "path": "screensavers/aurora/",
+      "tags": ["aurora", "sky", "stars"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "plasma",
+      "name": "Plasma",
+      "description": "Психоделический эффект плазмы",
+      "preview": "images/previews/plasma.png",
+      "path": "screensavers/plasma/",
+      "tags": ["plasma", "psychedelic", "color"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "confetti",
+      "name": "Confetti",
+      "description": "Разноцветные конфетти, падающие сверху",
+      "preview": "images/previews/confetti.png",
+      "path": "screensavers/confetti/",
+      "tags": ["confetti", "party", "colorful"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "maze",
+      "name": "Maze",
+      "description": "Автоматическая генерация лабиринтов",
+      "preview": "images/previews/maze.png",
+      "path": "screensavers/maze/",
+      "tags": ["maze", "generator", "puzzle"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "description": "Пульсирующие цветные круги",
+      "preview": "images/previews/pulse.png",
+      "path": "screensavers/pulse/",
+      "tags": ["pulse", "circles", "minimal"],
+      "technology": "css"
+    },
+    {
+      "id": "dna",
+      "name": "DNA",
+      "description": "Двойная спираль ДНК с цветными связями",
+      "preview": "images/previews/dna.png",
+      "path": "screensavers/dna/",
+      "tags": ["dna", "helix", "biology"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "galaxy",
+      "name": "Galaxy",
+      "description": "Вращающаяся спиральная галактика",
+      "preview": "images/previews/galaxy.png",
+      "path": "screensavers/galaxy/",
+      "tags": ["galaxy", "space", "3d"],
+      "technology": "threejs"
     }
   ]
 }
