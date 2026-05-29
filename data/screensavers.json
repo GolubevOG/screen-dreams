@@ -152,6 +152,51 @@
       "path": "screensavers/galaxy/",
       "tags": ["galaxy", "space", "3d"],
       "technology": "threejs"
+    },
+    {
+      "id": "bubbles",
+      "name": "Bubbles",
+      "description": "Мыльные пузыри, поднимающиеся вверх",
+      "preview": "images/previews/bubbles.png",
+      "path": "screensavers/bubbles/",
+      "tags": ["bubbles", "soap", "float"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "lightning",
+      "name": "Lightning",
+      "description": "Молнии, бьющие в ночном небе",
+      "preview": "images/previews/lightning.png",
+      "path": "screensavers/lightning/",
+      "tags": ["lightning", "storm", "electric"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "stars",
+      "name": "Stars",
+      "description": "Мерцающие звёзды на тёмном небе",
+      "preview": "images/previews/stars.png",
+      "path": "screensavers/stars/",
+      "tags": ["stars", "sky", "twinkle"],
+      "technology": "css"
+    },
+    {
+      "id": "waves",
+      "name": "Waves",
+      "description": "Абстрактные волны с светящимися частицами",
+      "preview": "images/previews/waves.png",
+      "path": "screensavers/waves/",
+      "tags": ["waves", "abstract", "flow"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "circle",
+      "name": "Circle",
+      "description": "Вращающиеся разноцветные круги",
+      "preview": "images/previews/circle.png",
+      "path": "screensavers/circle/",
+      "tags": ["circle", "rotate", "minimal"],
+      "technology": "css"
     }
   ]
 }
