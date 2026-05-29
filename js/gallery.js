@@ -12,12 +12,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function renderGallery(screensavers) {
     const gallery = document.getElementById('gallery');
-    gallery.innerHTML = screensavers.map(screensaver => createCard(screensaver)).join('');
+    const fragment = document.createDocumentFragment();
+
+    screensavers.forEach(screensaver => {
+        fragment.appendChild(createCard(screensaver));
+    });
+
+    gallery.appendChild(fragment);
+
+    if ('IntersectionObserver' in window) {
+        setupLazyLoading();
+    }
 }
 
 function createCard(screensaver) {
     const card = document.createElement('div');
     card.className = 'card';
+    card.setAttribute('data-screensaver', screensaver.id);
     card.onclick = () => {
         window.location.href = screensaver.path;
     };
@@ -37,9 +48,41 @@ function createCard(screensaver) {
         </div>
     `;
 
-    setTimeout(() => loadPreview(screensaver), 100);
-
     return card;
+}
+
+function setupLazyLoading() {
+    const options = {
+        root: null,
+        rootMargin: '50px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const card = entry.target;
+                const screensaverId = card.getAttribute('data-screensaver');
+                loadPreviewById(screensaverId);
+                observer.unobserve(card);
+            }
+        });
+    }, options);
+
+    document.querySelectorAll('.card').forEach(card => {
+        observer.observe(card);
+    });
+}
+
+function loadPreviewById(id) {
+    fetch('data/screensavers.json')
+        .then(response => response.json())
+        .then(data => {
+            const screensaver = data.screensavers.find(s => s.id === id);
+            if (screensaver) {
+                loadPreview(screensaver);
+            }
+        });
 }
 
 function loadPreview(screensaver) {
