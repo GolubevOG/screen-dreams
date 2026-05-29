@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body {
+            background: #0a0a0f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid;
+            animation: rotate var(--duration) linear infinite;
+        }
+        .circle:nth-child(1) { --size: 100px; --duration: 10s; border-color: #ff6b6b; }
+        .circle:nth-child(2) { --size: 150px; --duration: 12s; border-color: #4ecdc4; animation-direction: reverse; }
+        .circle:nth-child(3) { --size: 200px; --duration: 14s; border-color: #45b7d1; }
+        .circle:nth-child(4) { --size: 250px; --duration: 16s; border-color: #96ceb4; animation-direction: reverse; }
+        .circle:nth-child(5) { --size: 300px; --duration: 18s; border-color: #ffeaa7; }
+        .circle:nth-child(6) { --size: 350px; --duration: 20s; border-color: #fd79a8; animation-direction: reverse; }
+        .circle:nth-child(7) { --size: 400px; --duration: 22s; border-color: #a29bfe; }
+        .circle:nth-child(8) { --size: 450px; --duration: 24s; border-color: #00b894; animation-direction: reverse; }
+        .circle:nth-child(9) { --size: 500px; --duration: 26s; border-color: #fdcb6e; }
+        .circle:nth-child(10) { --size: 550px; --duration: 28s; border-color: #e17055; animation-direction: reverse; }
+
+        .circle {
+            width: var(--size);
+            height: var(--size);
+            margin-top: calc(var(--size) / -2);
+            margin-left: calc(var(--size) / -2);
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        body:hover .controls { opacity: 1; }
+        .back-btn, .fullscreen-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        .back-btn:hover, .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
+    </div>
+    <div class="watermark">GolubevOG</div>
+    <div class="container">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+    <script>
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.location.href = '../../index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
