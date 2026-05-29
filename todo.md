@@ -19,7 +19,7 @@
 
 ---
 
-## 🎨 Список скринсейверов (7 штук)
+## 🎨 Список скринсейверов (17 штук)
 
 | # | Название | Описание | Технология | Файл |
 |---|----------|----------|------------|------|
@@ -30,6 +30,16 @@
 | 5 | Rain | Вертикальный дождь с размытием | Canvas 2D | screensavers/rain/ |
 | 6 | Gradient | Плавно меняющиеся градиенты | CSS | screensavers/gradient/ |
 | 7 | Fire | Реалистичное пламя | Canvas 2D | screensavers/fire/ |
+| 8 | Nebula | Цветная туманность с частицами | Canvas 2D | screensavers/nebula/ |
+| 9 | Lava | Раскалённая лава с пузырьками | Canvas 2D | screensavers/lava/ |
+| 10 | Ocean | Спокойные волны океана | Canvas 2D | screensavers/ocean/ |
+| 11 | Aurora | Северное сияние со звёздами | Canvas 2D | screensavers/aurora/ |
+| 12 | Plasma | Психоделический эффект плазмы | Canvas 2D | screensavers/plasma/ |
+| 13 | Confetti | Разноцветные конфетти | Canvas 2D | screensavers/confetti/ |
+| 14 | Maze | Автоматическая генерация лабиринтов | Canvas 2D | screensavers/maze/ |
+| 15 | Pulse | Пульсирующие цветные круги | CSS | screensavers/pulse/ |
+| 16 | DNA | Двойная спираль ДНК | Canvas 2D | screensavers/dna/ |
+| 17 | Galaxy | Вращающаяся спиральная галактика | Three.js (WebGL) | screensavers/galaxy/ |
 
 ---
 
@@ -46,39 +56,25 @@ screen-dreams/
 │   └── screensavers.json         # Конфиг со списком скринсейверов
 ├── images/
 │   └── previews/                 # Статичные превью
-│       ├── matrix.png
-│       ├── particles.png
-│       ├── starfield.png
-│       ├── snow.png
-│       ├── rain.png
-│       ├── gradient.png
-│       └── fire.png
 ├── screensavers/
 │   ├── _template/                # Шаблон для новых скринсейверов
-│   │   ├── index.html
-│   │   ├── script.js
-│   │   └── style.css
 │   ├── matrix/
-│   │   ├── index.html
-│   │   └── script.js
 │   ├── particles/
-│   │   ├── index.html
-│   │   └── script.js
 │   ├── starfield/
-│   │   ├── index.html
-│   │   └── script.js
 │   ├── snow/
-│   │   ├── index.html
-│   │   └── script.js
 │   ├── rain/
-│   │   ├── index.html
-│   │   └── script.js
 │   ├── gradient/
-│   │   ├── index.html
-│   │   └── script.js
-│   └── fire/
-│       ├── index.html
-│       └── script.js
+│   ├── fire/
+│   ├── nebula/
+│   ├── lava/
+│   ├── ocean/
+│   ├── aurora/
+│   ├── plasma/
+│   ├── confetti/
+│   ├── maze/
+│   ├── pulse/
+│   ├── dna/
+│   └── galaxy/
 └── README.md
 ```
 
@@ -99,7 +95,7 @@ screen-dreams/
 - [x] Реализовать кнопку "Полный экран"
 - [x] Добавить обработку клавиши Escape
 
-### Этап 3: Скринсейверы (7 штук)
+### Этап 3: Скринсейверы (17 штук)
 - [x] **Matrix** — Canvas 2D (падающие символы)
 - [x] **Particles** — Canvas 2D (интерактивные частицы)
 - [x] **Starfield** — Three.js (3D звёзды)
@@ -107,6 +103,16 @@ screen-dreams/
 - [x] **Rain** — Canvas 2D (дождь)
 - [x] **Gradient** — CSS (плавные градиенты)
 - [x] **Fire** — Canvas 2D (эффект огня)
+- [x] **Nebula** — Canvas 2D (цветная туманность)
+- [x] **Lava** — Canvas 2D (раскалённая лава)
+- [x] **Ocean** — Canvas 2D (волны океана)
+- [x] **Aurora** — Canvas 2D (северное сияние)
+- [x] **Plasma** — Canvas 2D (психоделическая плазма)
+- [x] **Confetti** — Canvas 2D (разноцветные конфетти)
+- [x] **Maze** — Canvas 2D (генератор лабиринтов)
+- [x] **Pulse** — CSS (пульсирующие круги)
+- [x] **DNA** — Canvas 2D (двойная спираль ДНК)
+- [x] **Galaxy** — Three.js (вращающаяся галактика)
 
 ### Этап 4: Превью и финализация
 - [x] Создать скриншоты/превью для каждого скринсейвера (автоматические превью в gallery.js)
