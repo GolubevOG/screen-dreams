@@ -1,0 +1,67 @@
+{
+  "screensavers": [
+    {
+      "id": "matrix",
+      "name": "Matrix",
+      "description": "Зелёные символы падают вниз, как в одноимённом фильме",
+      "preview": "images/previews/matrix.png",
+      "path": "screensavers/matrix/",
+      "tags": ["matrix", "green", "text"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "particles",
+      "name": "Particles",
+      "description": "Интерактивные частицы, которые следуют за курсором мыши",
+      "preview": "images/previews/particles.png",
+      "path": "screensavers/particles/",
+      "tags": ["particles", "interactive", "mouse"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "starfield",
+      "name": "Starfield",
+      "description": "3D полёт сквозь бесконечное звёздное пространство",
+      "preview": "images/previews/starfield.png",
+      "path": "screensavers/starfield/",
+      "tags": ["space", "3d", "stars"],
+      "technology": "threejs"
+    },
+    {
+      "id": "snow",
+      "name": "Snow",
+      "description": "Мягко падающие снежинки на тёмном фоне",
+      "preview": "images/previews/snow.png",
+      "path": "screensavers/snow/",
+      "tags": ["snow", "winter", "calm"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "rain",
+      "name": "Rain",
+      "description": "Вертикальный дождь с эффектом размытия",
+      "preview": "images/previews/rain.png",
+      "path": "screensavers/rain/",
+      "tags": ["rain", "water", "relax"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "gradient",
+      "name": "Gradient",
+      "description": "Плавно меняющиеся цветовые градиенты",
+      "preview": "images/previews/gradient.png",
+      "path": "screensavers/gradient/",
+      "tags": ["gradient", "color", "smooth"],
+      "technology": "css"
+    },
+    {
+      "id": "fire",
+      "name": "Fire",
+      "description": "Реалистичный эффект горящего пламени",
+      "preview": "images/previews/fire.png",
+      "path": "screensavers/fire/",
+      "tags": ["fire", "flame", "warm"],
+      "technology": "canvas2d"
+    }
+  ]
+}
