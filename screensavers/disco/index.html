@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disco</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body {
+            background: #0a0a0f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: pulse var(--duration) ease-in-out infinite alternate;
+        }
+        .light:nth-child(1) { width: 200px; height: 200px; background: #ff0066; top: 20%; left: 10%; --duration: 2s; }
+        .light:nth-child(2) { width: 250px; height: 250px; background: #00ff66; top: 60%; left: 80%; --duration: 2.5s; animation-delay: 0.5s; }
+        .light:nth-child(3) { width: 180px; height: 180px; background: #6600ff; top: 70%; left: 20%; --duration: 3s; animation-delay: 1s; }
+        .light:nth-child(4) { width: 220px; height: 220px; background: #ffff00; top: 10%; left: 70%; --duration: 2.2s; animation-delay: 0.3s; }
+        .light:nth-child(5) { width: 190px; height: 190px; background: #00ffff; top: 50%; left: 50%; --duration: 2.8s; animation-delay: 0.7s; }
+        .light:nth-child(6) { width: 170px; height: 170px; background: #ff6600; top: 80%; left: 40%; --duration: 2.3s; animation-delay: 1.2s; }
+        .light:nth-child(7) { width: 210px; height: 210px; background: #ff00ff; top: 30%; left: 60%; --duration: 2.7s; animation-delay: 0.4s; }
+        .light:nth-child(8) { width: 160px; height: 160px; background: #00ff00; top: 40%; left: 30%; --duration: 2.1s; animation-delay: 0.9s; }
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.2); }
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        body:hover .controls { opacity: 1; }
+        .back-btn, .fullscreen-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        .back-btn:hover, .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
+    </div>
+    <div class="watermark">GolubevOG</div>
+    <div class="container">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+    </div>
+    <script>
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.location.href = '../../index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
