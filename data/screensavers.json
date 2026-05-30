@@ -197,6 +197,78 @@
       "path": "screensavers/circle/",
       "tags": ["circle", "rotate", "minimal"],
       "technology": "css"
+    },
+    {
+      "id": "fireflies",
+      "name": "Fireflies",
+      "description": "Светлячки, летающие в ночном лесу",
+      "preview": "images/previews/fireflies.png",
+      "path": "screensavers/fireflies/",
+      "tags": ["fireflies", "night", "glow"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "ripple",
+      "name": "Ripple",
+      "description": "Расходящиеся круги от клика мышью",
+      "preview": "images/previews/ripple.png",
+      "path": "screensavers/ripple/",
+      "tags": ["ripple", "click", "interactive"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "spiral",
+      "name": "Spiral",
+      "description": "Вращающаяся цветная спираль",
+      "preview": "images/previews/spiral.png",
+      "path": "screensavers/spiral/",
+      "tags": ["spiral", "color", "rotate"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "disco",
+      "name": "Disco",
+      "description": "Дискотечные огни с переливами",
+      "preview": "images/previews/disco.png",
+      "path": "screensavers/disco/",
+      "tags": ["disco", "party", "lights"],
+      "technology": "css"
+    },
+    {
+      "id": "asteroid",
+      "name": "Asteroid",
+      "description": "Полёт среди астероидов в космосе",
+      "preview": "images/previews/asteroid.png",
+      "path": "screensavers/asteroid/",
+      "tags": ["asteroid", "space", "flight"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "firework",
+      "name": "Firework",
+      "description": "Праздничные фейерверки с искрами",
+      "preview": "images/previews/firework.png",
+      "path": "screensavers/firework/",
+      "tags": ["firework", "celebration", "spark"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "clock",
+      "name": "Clock",
+      "description": "Жидкие цифры часов с радужным эффектом",
+      "preview": "images/previews/clock.png",
+      "path": "screensavers/clock/",
+      "tags": ["clock", "time", "rainbow"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "butterfly",
+      "name": "Butterfly",
+      "description": "Парящие бабочки с мерцающими крыльями",
+      "preview": "images/previews/butterfly.png",
+      "path": "screensavers/butterfly/",
+      "tags": ["butterfly", "nature", "fly"],
+      "technology": "canvas2d"
     }
   ]
 }
