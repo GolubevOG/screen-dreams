@@ -314,6 +314,24 @@
       "path": "screensavers/orbitclock/",
       "tags": ["orbit", "planets", "solar"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "starclock",
+      "name": "StarClock",
+      "description": "Часы, где числа складываются из мерцающих звёзд",
+      "preview": "images/previews/starclock.png",
+      "path": "screensavers/starclock/",
+      "tags": ["star", "clock", "twinkle"],
+      "technology": "html"
+    },
+    {
+      "id": "analogclock",
+      "name": "AnalogClock",
+      "description": "Благородные стрелочные часы с золотистыми деталями",
+      "preview": "images/previews/analogclock.png",
+      "path": "screensavers/analogclock/",
+      "tags": ["analog", "classic", "elegant"],
+      "technology": "html"
     }
   ]
 }
