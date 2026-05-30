@@ -41,49 +41,46 @@ function saveScrollPosition() {
 
 function renderFilters() {
     const filtersContainer = document.getElementById('filters');
-    const tagCounts = {};
-
-    allScreensavers.forEach(screensaver => {
-        screensaver.tags.forEach(tag => {
-            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-        });
-        tagCounts[screensaver.technology] = (tagCounts[screensaver.technology] || 0) + 1;
-    });
-
-    const sortedTags = Object.keys(tagCounts).sort();
 
     const categories = {
-        '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora'],
+        '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid'],
         '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies'],
         '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti'],
-        '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time'],
-        '🔬 Наука': ['dna', 'maze', 'matrix', 'disco'],
-        '🔧 Технология': ['canvas2d', 'threejs', 'css', 'html']
+        '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
+        '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework']
     };
 
-    let html = '';
-
+    const categoryCounts = {};
     Object.entries(categories).forEach(([category, tags]) => {
-        const availableTags = tags.filter(tag => tagCounts[tag]);
-        if (availableTags.length > 0) {
-            html += `<span class="filter-category">${category}</span>`;
-            availableTags.forEach(tag => {
-                html += `<button class="filter-btn" data-tag="${tag}">${tag} <span class="filter-count">${tagCounts[tag]}</span></button>`;
-            });
+        let count = 0;
+        allScreensavers.forEach(screensaver => {
+            if (tags.some(tag => screensaver.tags.includes(tag))) {
+                count++;
+            }
+        });
+        if (count > 0) {
+            categoryCounts[category] = count;
         }
     });
 
-    html += `<button class="filter-reset" id="filterReset">Сбросить все</button>`;
+    let html = '';
+
+    Object.entries(categoryCounts).forEach(([category, count]) => {
+        html += `<button class="filter-btn" data-category="${category}">${category} <span class="filter-count">${count}</span></button>`;
+    });
+
+    html += `<button class="filter-reset" id="filterReset">Сбросить</button>`;
     html += `<button class="filter-favorite ${showFavoritesOnly ? 'active' : ''}" id="filterFavorite">❤️ Избранное</button>`;
 
     filtersContainer.innerHTML = html;
 
     filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => toggleFilter(btn.dataset.tag));
+        btn.addEventListener('click', () => toggleFilter(btn.dataset.category));
     });
 
     document.getElementById('filterReset').addEventListener('click', resetFilters);
     document.getElementById('filterFavorite').addEventListener('click', toggleFavoritesFilter);
+    updateFilterUI();
 }
 
 function toggleFavorite(id) {
@@ -163,9 +160,12 @@ function resetFilters() {
 
 function updateFilterUI() {
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', activeFilters.has(btn.dataset.tag));
+        btn.classList.toggle('active', activeFilters.has(btn.dataset.category));
     });
-    document.getElementById('filterReset').classList.toggle('visible', activeFilters.size > 0);
+    const filterFavorite = document.getElementById('filterFavorite');
+    if (filterFavorite) {
+        filterFavorite.classList.toggle('active', showFavoritesOnly);
+    }
 }
 
 function applyFilters() {
@@ -176,9 +176,19 @@ function applyFilters() {
     }
 
     if (activeFilters.size > 0) {
+        const categoryTagMap = {
+            '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid'],
+            '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies'],
+            '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti'],
+            '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
+            '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework']
+        };
+
         filtered = filtered.filter(screensaver => {
-            const screensaverTags = [...screensaver.tags, screensaver.technology];
-            return [...activeFilters].some(filter => screensaverTags.includes(filter));
+            return [...activeFilters].some(category => {
+                const tags = categoryTagMap[category] || [];
+                return tags.some(tag => screensaver.tags.includes(tag));
+            });
         });
     }
 
