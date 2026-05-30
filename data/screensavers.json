@@ -269,6 +269,51 @@
       "path": "screensavers/butterfly/",
       "tags": ["butterfly", "nature", "fly"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "flipclock",
+      "name": "FlipClock",
+      "description": "Перекидные часы в стиле аэропорта с анимацией переворота",
+      "preview": "images/previews/flipclock.png",
+      "path": "screensavers/flipclock/",
+      "tags": ["flip", "clock", "airport"],
+      "technology": "html"
+    },
+    {
+      "id": "moonclock",
+      "name": "MoonClock",
+      "description": "Часы с фазой луны и мерцающими звёздами",
+      "preview": "images/previews/moonclock.png",
+      "path": "screensavers/moonclock/",
+      "tags": ["moon", "clock", "stars"],
+      "technology": "html"
+    },
+    {
+      "id": "pixelclock",
+      "name": "PixelClock",
+      "description": "Ретро-пиксельные часы в стиле 8-bit игр",
+      "preview": "images/previews/pixelclock.png",
+      "path": "screensavers/pixelclock/",
+      "tags": ["pixel", "retro", "8bit"],
+      "technology": "html"
+    },
+    {
+      "id": "gravityclock",
+      "name": "GravityClock",
+      "description": "Часы, где цифры падают под действием гравитации",
+      "preview": "images/previews/gravityclock.png",
+      "path": "screensavers/gravityclock/",
+      "tags": ["gravity", "physics", "fall"],
+      "technology": "canvas2d"
+    },
+    {
+      "id": "orbitclock",
+      "name": "OrbitClock",
+      "description": "Часы-орбиты планет Солнечной системы",
+      "preview": "images/previews/orbitclock.png",
+      "path": "screensavers/orbitclock/",
+      "tags": ["orbit", "planets", "solar"],
+      "technology": "canvas2d"
     }
   ]
 }
