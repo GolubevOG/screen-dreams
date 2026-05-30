@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoonClock</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body {
+            background: #0a0a1a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .clock-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+        .moon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 50%, #daa520 100%);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
+        }
+        .moon-shadow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #0a0a1a;
+            transition: transform 0.5s ease;
+        }
+        .time-display {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-align: center;
+        }
+        .date-display {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #888;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .moon-phase {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .hour-markers {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            transform: translate(-50%, -50%);
+        }
+        .hour-marker {
+            position: absolute;
+            width: 4px;
+            height: 15px;
+            background: #ffd700;
+            top: 0;
+            left: 50%;
+            transform-origin: 50% 150px;
+            border-radius: 2px;
+        }
+        .hour-marker.minor {
+            width: 2px;
+            height: 8px;
+            background: #666;
+        }
+        .hour-number {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #ffd700;
+            transform: translate(-50%, -50%);
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        body:hover .controls { opacity: 1; }
+        .back-btn, .fullscreen-btn {
+            background: rgba(255,215,0,0.1);
+            color: #ffd700;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        .back-btn:hover, .fullscreen-btn:hover {
+            background: rgba(255,215,0,0.2);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,215,0,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
+    </div>
+    <div class="watermark">GolubevOG</div>
+    <div class="stars" id="stars"></div>
+    <div class="clock-container">
+        <div class="hour-markers" id="markers"></div>
+        <div class="moon">
+            <div class="moon-shadow" id="moonShadow"></div>
+        </div>
+        <div class="moon-phase" id="moonPhase"></div>
+        <div class="time-display" id="time"></div>
+        <div class="date-display" id="date"></div>
+    </div>
+    <script>
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        const markersContainer = document.getElementById('markers');
+        for (let i = 0; i < 60; i++) {
+            const marker = document.createElement('div');
+            marker.className = 'hour-marker' + (i % 5 !== 0 ? ' minor' : '');
+            marker.style.transform = `rotate(${i * 6}deg)`;
+            markersContainer.appendChild(marker);
+        }
+
+        const moonPhases = [
+            'Новолуние', 'Растущая луна', 'Первая четверть',
+            'Растущая полная луна', 'Полнолуние', 'Убывающая полная луна',
+            'Последняя четверть', 'Убывающая луна'
+        ];
+
+        function getMoonPhase() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            let c = 0, e = 0, jd = 0, b = 0;
+            if (month < 3) {
+                c = year - 1;
+                e = month + 12;
+            } else {
+                c = year;
+                e = month;
+            }
+            jd = Math.floor(365.25 * (c + 4716)) + Math.floor(30.6001 * (e + 1)) + day - 1524.5;
+            const b = (jd - 2451550.1) / 29.530588853;
+            const age = b - Math.floor(b);
+            return Math.floor(age * 8) % 8;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
+
+            const phase = getMoonPhase();
+            document.getElementById('moonPhase').textContent = moonPhases[phase];
+
+            const moonShadow = document.getElementById('moonShadow');
+            const shadowPercent = (phase / 8) * 100;
+            moonShadow.style.transform = `translate(-50%, -50%) translateX(${shadowPercent - 50}%)`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.location.href = '../../index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
