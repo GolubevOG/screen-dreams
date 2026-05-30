@@ -13,51 +13,52 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            width: 100vw;
         }
         .clock {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: min(90vw, 90vh);
+            height: min(90vw, 90vh);
             border-radius: 50%;
             background: linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%);
             box-shadow:
-                0 0 0 4px rgba(180, 140, 80, 0.3),
-                0 0 0 8px rgba(180, 140, 80, 0.1),
-                0 0 60px rgba(180, 140, 80, 0.15),
-                inset 0 0 60px rgba(0, 0, 0, 0.5);
+                0 0 0 clamp(2px, 0.5vmin, 6px) rgba(180, 140, 80, 0.3),
+                0 0 0 clamp(4px, 1vmin, 12px) rgba(180, 140, 80, 0.1),
+                0 0 clamp(30px, 8vmin, 80px) rgba(180, 140, 80, 0.15),
+                inset 0 0 clamp(30px, 8vmin, 80px) rgba(0, 0, 0, 0.5);
         }
         .clock-face {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
+            top: 3%;
+            left: 3%;
+            right: 3%;
+            bottom: 3%;
             border-radius: 50%;
             background: linear-gradient(135deg, #12121e 0%, #0a0a14 100%);
-            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 0 clamp(20px, 5vmin, 50px) rgba(0, 0, 0, 0.5);
         }
         .hour-mark {
             position: absolute;
-            width: 3px;
-            height: 18px;
+            width: clamp(2px, 0.5vmin, 4px);
+            height: clamp(10px, 3vmin, 20px);
             background: rgba(180, 140, 80, 0.6);
-            top: 10px;
+            top: clamp(5px, 1.5vmin, 12px);
             left: 50%;
-            transform-origin: 50% 180px;
+            transform-origin: 50% calc(50vmin - clamp(5px, 1.5vmin, 12px));
             border-radius: 2px;
         }
         .hour-mark.major {
-            width: 4px;
-            height: 25px;
+            width: clamp(3px, 0.7vmin, 5px);
+            height: clamp(15px, 4vmin, 28px);
             background: rgba(200, 160, 80, 0.8);
         }
         .hour-number {
             position: absolute;
             font-family: 'Georgia', serif;
-            font-size: 24px;
+            font-size: clamp(14px, 3.5vmin, 28px);
             color: rgba(200, 170, 100, 0.7);
-            width: 30px;
-            height: 30px;
+            width: clamp(20px, 5vmin, 40px);
+            height: clamp(20px, 5vmin, 40px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -67,53 +68,64 @@
             bottom: 50%;
             left: 50%;
             transform-origin: 50% 100%;
-            border-radius: 4px;
+            border-radius: clamp(2px, 0.5vmin, 5px);
         }
         .hand-hour {
-            width: 6px;
-            height: 90px;
+            width: clamp(4px, 1vmin, 8px);
+            height: clamp(50px, 15vmin, 120px);
             background: linear-gradient(180deg, rgba(200, 160, 80, 0.9), rgba(180, 140, 80, 0.6));
-            margin-left: -3px;
-            box-shadow: 0 0 10px rgba(180, 140, 80, 0.3);
+            margin-left: calc(clamp(-2px, -0.5vmin, -4px));
+            box-shadow: 0 0 clamp(5px, 1.5vmin, 12px) rgba(180, 140, 80, 0.3);
         }
         .hand-minute {
-            width: 4px;
-            height: 120px;
+            width: clamp(3px, 0.7vmin, 5px);
+            height: clamp(70px, 20vmin, 160px);
             background: linear-gradient(180deg, rgba(200, 180, 120, 0.9), rgba(180, 160, 100, 0.6));
-            margin-left: -2px;
-            box-shadow: 0 0 10px rgba(200, 180, 120, 0.3);
+            margin-left: calc(clamp(-1.5px, -0.35vmin, -2.5px));
+            box-shadow: 0 0 clamp(5px, 1.5vmin, 12px) rgba(200, 180, 120, 0.3);
         }
         .hand-second {
-            width: 2px;
-            height: 140px;
+            width: clamp(1px, 0.3vmin, 2px);
+            height: clamp(80px, 23vmin, 180px);
             background: linear-gradient(180deg, #cc3333, #991111);
-            margin-left: -1px;
-            box-shadow: 0 0 8px rgba(200, 50, 50, 0.4);
+            margin-left: calc(clamp(-0.5px, -0.15vmin, -1px));
+            box-shadow: 0 0 clamp(4px, 1vmin, 8px) rgba(200, 50, 50, 0.4);
         }
         .center-cap {
             position: absolute;
-            width: 16px;
-            height: 16px;
+            width: clamp(10px, 2.5vmin, 20px);
+            height: clamp(10px, 2.5vmin, 20px);
             background: radial-gradient(circle, #d4a846, #8a6c2a);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
-            box-shadow: 0 0 10px rgba(180, 140, 80, 0.5);
+            box-shadow: 0 0 clamp(5px, 1.5vmin, 12px) rgba(180, 140, 80, 0.5);
         }
         .date-window {
             position: absolute;
-            right: 55px;
+            right: clamp(25px, 8vmin, 65px);
             top: 50%;
             transform: translateY(-50%);
             background: #0a0a14;
             border: 1px solid rgba(180, 140, 80, 0.2);
-            border-radius: 4px;
-            padding: 4px 8px;
+            border-radius: clamp(2px, 0.5vmin, 5px);
+            padding: clamp(2px, 0.5vmin, 5px) clamp(4px, 1vmin, 10px);
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: clamp(10px, 2vmin, 18px);
             color: rgba(200, 170, 100, 0.8);
+        }
+        .brand {
+            position: absolute;
+            top: clamp(60px, 18vmin, 150px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Georgia', serif;
+            font-size: clamp(8px, 1.5vmin, 14px);
+            color: rgba(180, 140, 80, 0.4);
+            letter-spacing: clamp(2px, 0.5vmin, 5px);
+            text-transform: uppercase;
         }
         .controls {
             position: fixed;
@@ -163,6 +175,7 @@
     <div class="watermark">GolubevOG</div>
     <div class="clock">
         <div class="clock-face" id="face">
+            <div class="brand">Screen Dreams</div>
             <div class="hand hand-hour" id="hourHand"></div>
             <div class="hand hand-minute" id="minuteHand"></div>
             <div class="hand hand-second" id="secondHand"></div>
@@ -180,27 +193,42 @@
             face.appendChild(mark);
         }
 
-        const numbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        const radius = 150;
-        numbers.forEach((num, i) => {
-            const angle = (i * 30 - 90) * Math.PI / 180;
-            const x = 195 + Math.cos(angle) * radius - 15;
-            const y = 195 + Math.sin(angle) * radius - 15;
-            const el = document.createElement('div');
-            el.className = 'hour-number';
-            el.textContent = num;
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-            face.appendChild(el);
-        });
+        function updateNumbers() {
+            face.querySelectorAll('.hour-number').forEach(el => el.remove());
+
+            const faceRect = face.getBoundingClientRect();
+            const faceW = faceRect.width;
+            const faceH = faceRect.height;
+            const cx = faceW / 2;
+            const cy = faceH / 2;
+            const radius = Math.min(cx, cy) * 0.78;
+
+            const numbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+            numbers.forEach((num, i) => {
+                const angle = (i * 30 - 90) * Math.PI / 180;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+                const el = document.createElement('div');
+                el.className = 'hour-number';
+                el.textContent = num;
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+                el.style.transform = 'translate(-50%, -50%)';
+                face.appendChild(el);
+            });
+        }
+
+        updateNumbers();
+        window.addEventListener('resize', updateNumbers);
 
         function updateClock() {
             const now = new Date();
             const seconds = now.getSeconds();
+            const millis = now.getMilliseconds();
             const minutes = now.getMinutes();
             const hours = now.getHours() % 12;
 
-            const secondDeg = seconds * 6;
+            const secondDeg = (seconds + millis / 1000) * 6;
             const minuteDeg = minutes * 6 + seconds * 0.1;
             const hourDeg = hours * 30 + minutes * 0.5;
 
@@ -212,7 +240,7 @@
         }
 
         updateClock();
-        setInterval(updateClock, 1000);
+        setInterval(updateClock, 50);
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
