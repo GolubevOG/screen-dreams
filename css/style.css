@@ -34,6 +34,136 @@ body {
     font-weight: 300;
 }
 
+.toolbar {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filter-btn {
+    padding: 6px 14px;
+    border: 1px solid #2a2a3e;
+    border-radius: 20px;
+    background: #12121a;
+    color: #888;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: lowercase;
+}
+
+.filter-btn:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.filter-btn.active {
+    background: #667eea;
+    border-color: #667eea;
+    color: #fff;
+}
+
+.filter-reset {
+    padding: 6px 14px;
+    border: 1px solid #ff6b6b33;
+    border-radius: 20px;
+    background: transparent;
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: none;
+}
+
+.filter-reset.visible {
+    display: block;
+}
+
+.filter-reset:hover {
+    background: #ff6b6b22;
+    border-color: #ff6b6b;
+}
+
+.filter-category {
+    font-size: 0.75rem;
+    color: #555;
+    padding: 6px 0;
+    margin-right: 4px;
+    white-space: nowrap;
+}
+
+.filter-count {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-left: 2px;
+}
+
+.search-sort {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 16px;
+    border: 1px solid #2a2a3e;
+    border-radius: 8px;
+    background: #12121a;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search:focus {
+    border-color: #667eea;
+}
+
+.search::placeholder {
+    color: #555;
+}
+
+.sort {
+    padding: 10px 16px;
+    border: 1px solid #2a2a3e;
+    border-radius: 8px;
+    background: #12121a;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.sort:focus {
+    border-color: #667eea;
+}
+
+.random-btn {
+    padding: 10px 16px;
+    border: 1px solid #667eea33;
+    border-radius: 8px;
+    background: #12121a;
+    color: #667eea;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.random-btn:hover {
+    background: #667eea22;
+    border-color: #667eea;
+}
+
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

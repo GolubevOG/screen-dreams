@@ -12,6 +12,19 @@
         <p class="header__subtitle">Интерактивные скринсейверы для вашего браузера</p>
     </header>
 
+    <div class="toolbar">
+        <div class="filters" id="filters"></div>
+        <div class="search-sort">
+            <input type="text" class="search" id="search" placeholder="Поиск скринсейверов...">
+            <select class="sort" id="sort">
+                <option value="name-asc">По имени (А-Я)</option>
+                <option value="name-desc">По имени (Я-А)</option>
+                <option value="tech">По технологии</option>
+            </select>
+            <button class="random-btn" id="randomBtn" title="Случайный скринсейвер">🎲</button>
+        </div>
+    </div>
+
     <main class="gallery" id="gallery"></main>
 
     <footer class="footer">
