@@ -1,8 +1,8 @@
 let allScreensavers = [];
-let activeFilters = new Set();
-let currentSort = 'name-asc';
-let searchQuery = '';
-let showFavoritesOnly = false;
+let activeFilters = new Set(JSON.parse(localStorage.getItem('screenDreamsFilters') || '[]'));
+let currentSort = localStorage.getItem('screenDreamsSort') || 'name-asc';
+let searchQuery = localStorage.getItem('screenDreamsSearch') || '';
+let showFavoritesOnly = localStorage.getItem('screenDreamsFavoritesOnly') === 'true';
 const favorites = JSON.parse(localStorage.getItem('screenDreamsFavorites') || '[]');
 const activeAnimations = new Map();
 const FPS = 15;
@@ -19,10 +19,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderFilters();
         renderGallery(allScreensavers);
         setupEventListeners();
+        restoreScrollPosition();
     } catch (error) {
         gallery.innerHTML = '<p style="text-align:center;padding:40px;color:#666;">Не удалось загрузить список скринсейверов</p>';
     }
 });
+
+function restoreScrollPosition() {
+    const savedScroll = localStorage.getItem('screenDreamsScrollPosition');
+    if (savedScroll) {
+        setTimeout(() => {
+            window.scrollTo(0, parseInt(savedScroll));
+        }, 100);
+    }
+    updateFilterUI();
+}
+
+function saveScrollPosition() {
+    localStorage.setItem('screenDreamsScrollPosition', window.scrollY);
+}
 
 function renderFilters() {
     const filtersContainer = document.getElementById('filters');
@@ -94,6 +109,7 @@ function updateFavoriteButtons() {
 
 function toggleFavoritesFilter() {
     showFavoritesOnly = !showFavoritesOnly;
+    localStorage.setItem('screenDreamsFavoritesOnly', showFavoritesOnly);
     document.getElementById('filterFavorite').classList.toggle('active', showFavoritesOnly);
     applyFilters();
 }
@@ -134,6 +150,7 @@ function toggleFilter(tag) {
     } else {
         activeFilters.add(tag);
     }
+    localStorage.setItem('screenDreamsFilters', JSON.stringify([...activeFilters]));
     updateFilterUI();
     applyFilters();
 }
@@ -194,17 +211,22 @@ function sortScreensavers(screensavers) {
 
 function setupEventListeners() {
     const searchInput = document.getElementById('search');
+    searchInput.value = searchQuery;
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             searchQuery = e.target.value;
+            localStorage.setItem('screenDreamsSearch', searchQuery);
             applyFilters();
         }, 300);
     });
 
-    document.getElementById('sort').addEventListener('change', (e) => {
+    const sortSelect = document.getElementById('sort');
+    sortSelect.value = currentSort;
+    sortSelect.addEventListener('change', (e) => {
         currentSort = e.target.value;
+        localStorage.setItem('screenDreamsSort', currentSort);
         applyFilters();
     });
 
@@ -269,6 +291,7 @@ function createCard(screensaver) {
     card.addEventListener('click', (e) => {
         if (e.target.closest('.favorite-btn')) return;
         stopPreviewAnimation(screensaver.id);
+        saveScrollPosition();
         window.location.href = screensaver.path;
     });
 
