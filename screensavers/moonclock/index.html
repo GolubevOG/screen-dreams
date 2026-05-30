@@ -7,74 +7,16 @@
     <style>
         * { margin: 0; padding: 0; }
         body {
-            background: #0a0a1a;
+            background: #050510;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-        }
-        .clock-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-        }
-        .moon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 50%, #daa520 100%);
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
-        }
-        .moon-shadow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: #0a0a1a;
-            transition: transform 0.5s ease;
-        }
-        .time-display {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
             font-family: 'Courier New', monospace;
-            font-size: 36px;
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            text-align: center;
-        }
-        .date-display {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            color: #888;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .moon-phase {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #666;
-            text-align: center;
         }
         .stars {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -85,41 +27,95 @@
             position: absolute;
             background: white;
             border-radius: 50%;
-            animation: twinkle 2s ease-in-out infinite;
+            animation: twinkle var(--dur) ease-in-out infinite;
         }
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
-        .hour-markers {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300px;
-            height: 300px;
-            transform: translate(-50%, -50%);
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            z-index: 10;
         }
-        .hour-marker {
+        .moon {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        .moon-body {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 40%, #daa520 100%);
+            box-shadow:
+                0 0 40px rgba(255, 215, 0, 0.4),
+                0 0 80px rgba(255, 215, 0, 0.2),
+                0 0 120px rgba(255, 215, 0, 0.1),
+                inset -20px -10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .moon-crater {
             position: absolute;
-            width: 4px;
-            height: 15px;
-            background: #ffd700;
+            border-radius: 50%;
+            background: rgba(180, 150, 50, 0.4);
+        }
+        .moon-crater:nth-child(1) { width: 30px; height: 30px; top: 40px; left: 50px; }
+        .moon-crater:nth-child(2) { width: 20px; height: 20px; top: 80px; left: 120px; }
+        .moon-crater:nth-child(3) { width: 25px; height: 25px; top: 120px; left: 60px; }
+        .moon-crater:nth-child(4) { width: 15px; height: 15px; top: 60px; left: 140px; }
+        .moon-crater:nth-child(5) { width: 18px; height: 18px; top: 140px; left: 130px; }
+        .moon-shadow {
+            position: absolute;
             top: 0;
-            left: 50%;
-            transform-origin: 50% 150px;
-            border-radius: 2px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #050510;
+            transition: transform 0.3s ease;
         }
-        .hour-marker.minor {
-            width: 2px;
-            height: 8px;
-            background: #666;
-        }
-        .hour-number {
+        .moon-glow {
             position: absolute;
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
+            top: -30px;
+            left: -30px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .time-display {
+            font-size: 64px;
+            font-weight: bold;
             color: #ffd700;
-            transform: translate(-50%, -50%);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            letter-spacing: 8px;
+        }
+        .moon-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .moon-phase-name {
+            font-size: 18px;
+            color: #888;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .moon-age {
+            font-size: 14px;
+            color: #555;
+            letter-spacing: 2px;
+        }
+        .date-display {
+            font-size: 16px;
+            color: #444;
+            letter-spacing: 3px;
         }
         .controls {
             position: fixed;
@@ -134,24 +130,26 @@
         }
         body:hover .controls { opacity: 1; }
         .back-btn, .fullscreen-btn {
-            background: rgba(255,215,0,0.1);
+            background: rgba(255,215,0,0.08);
             color: #ffd700;
             padding: 10px 20px;
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 5px;
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             backdrop-filter: blur(10px);
             text-decoration: none;
+            transition: all 0.2s;
         }
         .back-btn:hover, .fullscreen-btn:hover {
-            background: rgba(255,215,0,0.2);
+            background: rgba(255,215,0,0.15);
+            border-color: rgba(255,215,0,0.4);
         }
         .watermark {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            color: rgba(255,215,0,0.3);
+            color: rgba(255,215,0,0.2);
             font-size: 14px;
             font-family: monospace;
             z-index: 100;
@@ -167,59 +165,66 @@
     <div class="watermark">GolubevOG</div>
     <div class="stars" id="stars"></div>
     <div class="clock-container">
-        <div class="hour-markers" id="markers"></div>
         <div class="moon">
-            <div class="moon-shadow" id="moonShadow"></div>
+            <div class="moon-glow"></div>
+            <div class="moon-body">
+                <div class="moon-crater"></div>
+                <div class="moon-crater"></div>
+                <div class="moon-crater"></div>
+                <div class="moon-crater"></div>
+                <div class="moon-crater"></div>
+                <div class="moon-shadow" id="moonShadow"></div>
+            </div>
         </div>
-        <div class="moon-phase" id="moonPhase"></div>
         <div class="time-display" id="time"></div>
+        <div class="moon-info">
+            <div class="moon-phase-name" id="phaseName"></div>
+            <div class="moon-age" id="moonAge"></div>
+        </div>
         <div class="date-display" id="date"></div>
     </div>
     <script>
         const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 150; i++) {
             const star = document.createElement('div');
             star.className = 'star';
-            const size = Math.random() * 2 + 1;
+            const size = Math.random() * 2.5 + 0.5;
             star.style.width = size + 'px';
             star.style.height = size + 'px';
             star.style.left = Math.random() * 100 + '%';
             star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+            star.style.animationDelay = Math.random() * 4 + 's';
             starsContainer.appendChild(star);
         }
 
-        const markersContainer = document.getElementById('markers');
-        for (let i = 0; i < 60; i++) {
-            const marker = document.createElement('div');
-            marker.className = 'hour-marker' + (i % 5 !== 0 ? ' minor' : '');
-            marker.style.transform = `rotate(${i * 6}deg)`;
-            markersContainer.appendChild(marker);
-        }
-
-        const moonPhases = [
-            'Новолуние', 'Растущая луна', 'Первая четверть',
-            'Растущая полная луна', 'Полнолуние', 'Убывающая полная луна',
-            'Последняя четверть', 'Убывающая луна'
+        const phaseNames = [
+            'Новолуние',
+            'Растущий серп',
+            'Первая четверть',
+            'Растущая луна',
+            'Полнолуние',
+            'Убывающая луна',
+            'Последняя четверть',
+            'Убывающий серп'
         ];
 
-        function getMoonPhase() {
+        function getMoonInfo() {
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth() + 1;
             const day = now.getDate();
-            let c = 0, e = 0, jd = 0, b = 0;
-            if (month < 3) {
-                c = year - 1;
-                e = month + 12;
-            } else {
-                c = year;
-                e = month;
-            }
+
+            let c, e, jd;
+            if (month < 3) { c = year - 1; e = month + 12; }
+            else { c = year; e = month; }
             jd = Math.floor(365.25 * (c + 4716)) + Math.floor(30.6001 * (e + 1)) + day - 1524.5;
-            const b = (jd - 2451550.1) / 29.530588853;
-            const age = b - Math.floor(b);
-            return Math.floor(age * 8) % 8;
+            const daysSinceNew = jd - 2451550.1;
+            const lunation = daysSinceNew / 29.530588853;
+            const age = (lunation - Math.floor(lunation)) * 29.530588853;
+            const phase = Math.floor(((lunation - Math.floor(lunation)) * 8) % 8);
+
+            return { age: Math.floor(age), phase, totalAge: age };
         }
 
         function updateClock() {
@@ -232,12 +237,18 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
 
-            const phase = getMoonPhase();
-            document.getElementById('moonPhase').textContent = moonPhases[phase];
+            const moonInfo = getMoonInfo();
+            document.getElementById('phaseName').textContent = phaseNames[moonInfo.phase];
+            document.getElementById('moonAge').textContent = `День лунного цикла: ${moonInfo.age}`;
 
-            const moonShadow = document.getElementById('moonShadow');
-            const shadowPercent = (phase / 8) * 100;
-            moonShadow.style.transform = `translate(-50%, -50%) translateX(${shadowPercent - 50}%)`;
+            const shadow = document.getElementById('moonShadow');
+            let shadowX;
+            if (moonInfo.phase <= 4) {
+                shadowX = 100 - (moonInfo.totalAge / 29.53) * 200;
+            } else {
+                shadowX = -100 + ((moonInfo.totalAge / 29.53) * 200 - 100);
+            }
+            shadow.style.transform = `translateX(${shadowX}%)`;
         }
 
         updateClock();
