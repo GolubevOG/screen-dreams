@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GravityClock</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #0a0a1a; overflow: hidden; }
+        canvas { display: block; }
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        body:hover .controls { opacity: 1; }
+        .back-btn, .fullscreen-btn {
+            background: rgba(255,100,150,0.1);
+            color: #ff6496;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,100,150,0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        .back-btn:hover, .fullscreen-btn:hover {
+            background: rgba(255,100,150,0.2);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,100,150,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
+    </div>
+    <div class="watermark">GolubevOG</div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particles = [];
+        const gravity = 0.2;
+        const floor = canvas.height - 100;
+
+        class Digit {
+            constructor(x, y, char) {
+                this.x = x;
+                this.y = y;
+                this.targetY = y;
+                this.char = char;
+                this.vy = 0;
+                this.settled = false;
+                this.color = `hsl(${Math.random() * 60 + 330}, 80%, 60%)`;
+                this.bounce = 0.6;
+            }
+
+            update() {
+                if (!this.settled) {
+                    this.vy += gravity;
+                    this.y += this.vy;
+
+                    if (this.y >= this.targetY) {
+                        this.y = this.targetY;
+                        this.vy *= -this.bounce;
+                        if (Math.abs(this.vy) < 1) {
+                            this.settled = true;
+                            this.vy = 0;
+                        }
+                    }
+                }
+            }
+
+            draw() {
+                ctx.font = 'bold 120px Courier New';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                ctx.fillStyle = this.color + '33';
+                ctx.fillText(this.char, this.x + 3, this.y + 3);
+
+                ctx.fillStyle = this.color;
+                ctx.fillText(this.char, this.x, this.y);
+            }
+
+            reset(char) {
+                this.char = char;
+                this.y = -100;
+                this.vy = 0;
+                this.settled = false;
+            }
+        }
+
+        let prevTime = '';
+        const digitObjects = [];
+
+        function initDigits() {
+            const centerX = canvas.width / 2;
+            const spacing = 80;
+            const y = canvas.height / 2;
+
+            for (let i = 0; i < 8; i++) {
+                const x = centerX + (i - 3.5) * spacing;
+                const char = i === 2 || i === 5 ? ':' : '0';
+                digitObjects.push(new Digit(x, y, char));
+            }
+        }
+
+        initDigits();
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeStr = hours + ':' + minutes + ':' + seconds;
+
+            if (timeStr !== prevTime) {
+                for (let i = 0; i < 8; i++) {
+                    if (timeStr[i] !== prevTime[i]) {
+                        digitObjects[i].reset(timeStr[i]);
+                    }
+                }
+                prevTime = timeStr;
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 100, 150, 0.1)';
+            ctx.fillRect(0, canvas.height - 100, canvas.width, 2);
+
+            digitObjects.forEach(digit => {
+                digit.update();
+                digit.draw();
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+        draw();
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.location.href = '../../index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
