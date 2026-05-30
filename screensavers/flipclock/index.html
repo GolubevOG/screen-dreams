@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; }
         body {
-            background: #1a1a2e;
+            background: #0d0d1a;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -17,19 +17,22 @@
         }
         .clock-container {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             align-items: center;
         }
         .flip-unit {
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 12px;
         }
         .flip-card {
             position: relative;
-            width: 120px;
-            height: 80px;
-            perspective: 300px;
+            width: 160px;
+            height: 180px;
+            perspective: 500px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
         }
         .flip-card .top,
         .flip-card .bottom {
@@ -37,108 +40,151 @@
             width: 100%;
             height: 50%;
             overflow: hidden;
-            background: linear-gradient(180deg, #2d2d4a 0%, #1a1a2e 100%);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .flip-card .top {
             top: 0;
-            border-radius: 10px 10px 0 0;
+            background: linear-gradient(180deg, #2a2a4a 0%, #1e1e38 100%);
+            border-radius: 12px 12px 0 0;
             border-bottom: 1px solid #000;
         }
         .flip-card .bottom {
             bottom: 0;
-            border-radius: 0 0 10px 10px;
-        }
-        .flip-card .top span,
-        .flip-card .bottom span {
-            font-size: 60px;
-            font-weight: bold;
-            color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            background: linear-gradient(180deg, #1a1a30 0%, #15152a 100%);
+            border-radius: 0 0 12px 12px;
         }
         .flip-card .top span {
-            position: relative;
-            top: 50%;
-        }
-        .flip-card .bottom span {
-            position: relative;
-            bottom: 50%;
-        }
-        .flip-card .flip-top {
-            position: absolute;
-            width: 100%;
-            height: 50%;
-            top: 0;
-            overflow: hidden;
-            background: linear-gradient(180deg, #2d2d4a 0%, #1a1a2e 100%);
-            border-radius: 10px 10px 0 0;
-            transform-origin: bottom;
-            z-index: 2;
-        }
-        .flip-card .flip-top span {
             position: absolute;
             width: 100%;
             text-align: center;
-            font-size: 60px;
+            font-size: 110px;
             font-weight: bold;
             color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
             top: 50%;
+            transform: translateY(-50%);
+            line-height: 1;
         }
-        .flip-card.flipping .flip-top {
-            animation: flipTop 0.3s ease-in forwards;
+        .flip-card .bottom span {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 110px;
+            font-weight: bold;
+            color: #00d4ff;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            bottom: 50%;
+            transform: translateY(50%);
+            line-height: 1;
         }
-        .flip-card.flipping .flip-bottom {
-            animation: flipBottom 0.3s 0.3s ease-out forwards;
+        .flip-card .fold {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            overflow: hidden;
+            z-index: 10;
         }
-        @keyframes flipTop {
+        .flip-card .fold-top {
+            top: 0;
+            transform-origin: bottom center;
+            background: linear-gradient(180deg, #2a2a4a 0%, #1e1e38 100%);
+            border-radius: 12px 12px 0 0;
+            backface-visibility: hidden;
+        }
+        .flip-card .fold-top span {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 110px;
+            font-weight: bold;
+            color: #00d4ff;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            top: 50%;
+            transform: translateY(-50%);
+            line-height: 1;
+            backface-visibility: hidden;
+        }
+        .flip-card .fold-bottom {
+            bottom: 0;
+            transform-origin: top center;
+            transform: rotateX(90deg);
+            background: linear-gradient(180deg, #1a1a30 0%, #15152a 100%);
+            border-radius: 0 0 12px 12px;
+            backface-visibility: hidden;
+        }
+        .flip-card .fold-bottom span {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 110px;
+            font-weight: bold;
+            color: #00d4ff;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            bottom: 50%;
+            transform: translateY(50%);
+            line-height: 1;
+            backface-visibility: hidden;
+        }
+        .flip-card.flipping .fold-top {
+            animation: flipDown 0.4s ease-in forwards;
+        }
+        .flip-card.flipping .fold-bottom {
+            animation: flipUp 0.4s 0.4s ease-out forwards;
+        }
+        @keyframes flipDown {
             0% { transform: rotateX(0deg); }
             100% { transform: rotateX(-90deg); }
         }
-        @keyframes flipBottom {
+        @keyframes flipUp {
             0% { transform: rotateX(90deg); }
             100% { transform: rotateX(0deg); }
         }
-        .flip-card .flip-bottom {
+        .flip-card .center-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #000;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+        .flip-card .shadow-top {
             position: absolute;
             width: 100%;
             height: 50%;
-            bottom: 0;
-            overflow: hidden;
-            background: linear-gradient(180deg, #2d2d4a 0%, #1a1a2e 100%);
-            border-radius: 0 0 10px 10px;
-            transform-origin: top;
-            z-index: 2;
-        }
-        .flip-card .flip-bottom span {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            font-size: 60px;
-            font-weight: bold;
-            color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-            bottom: 50%;
+            top: 50%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+            z-index: 15;
+            pointer-events: none;
         }
         .separator {
-            font-size: 60px;
+            font-size: 80px;
             color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
             animation: blink 1s infinite;
-            margin-top: -20px;
+            margin-top: -30px;
         }
         @keyframes blink {
             0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
+            51%, 100% { opacity: 0.2; }
         }
         .label {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
             text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+        .date-display {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: #444;
             letter-spacing: 3px;
+            text-transform: uppercase;
         }
         .controls {
             position: fixed;
@@ -153,24 +199,26 @@
         }
         body:hover .controls { opacity: 1; }
         .back-btn, .fullscreen-btn {
-            background: rgba(0,212,255,0.1);
+            background: rgba(0,212,255,0.08);
             color: #00d4ff;
             padding: 10px 20px;
-            border: 1px solid rgba(0,212,255,0.3);
-            border-radius: 5px;
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             backdrop-filter: blur(10px);
             text-decoration: none;
+            transition: all 0.2s;
         }
         .back-btn:hover, .fullscreen-btn:hover {
-            background: rgba(0,212,255,0.2);
+            background: rgba(0,212,255,0.15);
+            border-color: rgba(0,212,255,0.4);
         }
         .watermark {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            color: rgba(0,212,255,0.3);
+            color: rgba(0,212,255,0.2);
             font-size: 14px;
             font-family: monospace;
             z-index: 100;
@@ -189,8 +237,10 @@
             <div class="flip-card" id="hours">
                 <div class="top"><span id="hours-top">00</span></div>
                 <div class="bottom"><span id="hours-bottom">00</span></div>
-                <div class="flip-top"><span id="hours-flip-top">00</span></div>
-                <div class="flip-bottom"><span id="hours-flip-bottom">00</span></div>
+                <div class="fold fold-top"><span id="hours-fold-top">00</span></div>
+                <div class="fold fold-bottom"><span id="hours-fold-bottom">00</span></div>
+                <div class="center-line"></div>
+                <div class="shadow-top"></div>
             </div>
             <div class="label">Часы</div>
         </div>
@@ -199,8 +249,10 @@
             <div class="flip-card" id="minutes">
                 <div class="top"><span id="minutes-top">00</span></div>
                 <div class="bottom"><span id="minutes-bottom">00</span></div>
-                <div class="flip-top"><span id="minutes-flip-top">00</span></div>
-                <div class="flip-bottom"><span id="minutes-flip-bottom">00</span></div>
+                <div class="fold fold-top"><span id="minutes-fold-top">00</span></div>
+                <div class="fold fold-bottom"><span id="minutes-fold-bottom">00</span></div>
+                <div class="center-line"></div>
+                <div class="shadow-top"></div>
             </div>
             <div class="label">Минуты</div>
         </div>
@@ -209,12 +261,15 @@
             <div class="flip-card" id="seconds">
                 <div class="top"><span id="seconds-top">00</span></div>
                 <div class="bottom"><span id="seconds-bottom">00</span></div>
-                <div class="flip-top"><span id="seconds-flip-top">00</span></div>
-                <div class="flip-bottom"><span id="seconds-flip-bottom">00</span></div>
+                <div class="fold fold-top"><span id="seconds-fold-top">00</span></div>
+                <div class="fold fold-bottom"><span id="seconds-fold-bottom">00</span></div>
+                <div class="center-line"></div>
+                <div class="shadow-top"></div>
             </div>
             <div class="label">Секунды</div>
         </div>
     </div>
+    <div class="date-display" id="date"></div>
     <script>
         let prevHours = '', prevMinutes = '', prevSeconds = '';
 
@@ -236,17 +291,26 @@
                 flipCard('hours', prevHours, hours);
                 prevHours = hours;
             }
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
         }
 
         function flipCard(id, oldVal, newVal) {
+            if (!oldVal && oldVal !== '00') {
+                document.getElementById(id + '-top').textContent = newVal;
+                document.getElementById(id + '-bottom').textContent = newVal;
+                return;
+            }
+
             const card = document.getElementById(id);
-            const flipTop = document.getElementById(id + '-flip-top');
-            const flipBottom = document.getElementById(id + '-flip-bottom');
+            const foldTop = document.getElementById(id + '-fold-top');
+            const foldBottom = document.getElementById(id + '-fold-bottom');
             const topSpan = document.getElementById(id + '-top');
             const bottomSpan = document.getElementById(id + '-bottom');
 
-            flipTop.textContent = oldVal;
-            flipBottom.textContent = newVal;
+            foldTop.textContent = oldVal;
+            foldBottom.textContent = newVal;
             topSpan.textContent = newVal;
             bottomSpan.textContent = oldVal;
 
@@ -257,7 +321,7 @@
             setTimeout(() => {
                 topSpan.textContent = newVal;
                 bottomSpan.textContent = newVal;
-            }, 600);
+            }, 800);
         }
 
         updateClock();
