@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; }
         body {
-            background: #0f0f23;
+            background: #0a0a12;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -15,55 +15,7 @@
             min-height: 100vh;
             font-family: 'Courier New', monospace;
         }
-        .clock-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-        }
-        .pixel-time {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .pixel-digit {
-            display: grid;
-            grid-template-columns: repeat(5, 12px);
-            grid-template-rows: repeat(7, 12px);
-            gap: 3px;
-        }
-        .pixel {
-            width: 12px;
-            height: 12px;
-            background: #1a1a2e;
-            border-radius: 2px;
-            transition: background 0.2s;
-        }
-        .pixel.on {
-            background: #00ff88;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-        .pixel.on.green { background: #00ff88; box-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
-        .pixel.on.blue { background: #00d4ff; box-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
-        .pixel.on.purple { background: #ff00ff; box-shadow: 0 0 10px rgba(255, 0, 255, 0.5); }
-        .pixel.on.orange { background: #ff8800; box-shadow: 0 0 10px rgba(255, 136, 0, 0.5); }
-        .colon {
-            display: grid;
-            grid-template-rows: repeat(7, 12px);
-            gap: 3px;
-            margin: 0 5px;
-        }
-        .colon .pixel {
-            width: 12px;
-            height: 12px;
-        }
-        .date-display {
-            font-size: 18px;
-            color: #00ff88;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-            letter-spacing: 3px;
-        }
-        .scanline {
+        .scanlines {
             position: fixed;
             top: 0;
             left: 0;
@@ -71,13 +23,76 @@
             height: 100%;
             background: repeating-linear-gradient(
                 0deg,
-                rgba(0, 0, 0, 0.1) 0px,
-                rgba(0, 0, 0, 0.1) 1px,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 0, 0, 0.15) 1px,
                 transparent 1px,
-                transparent 3px
+                transparent 4px
             );
             pointer-events: none;
-            z-index: 10;
+            z-index: 100;
+        }
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+            z-index: 99;
+        }
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        .pixel-time {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .pixel-digit {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 6px;
+            width: 180px;
+            height: 252px;
+        }
+        .pixel {
+            background: #111118;
+            border-radius: 4px;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .pixel.on {
+            background: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6), inset 0 0 8px rgba(0, 255, 136, 0.3);
+        }
+        .colon-container {
+            display: grid;
+            grid-template-rows: repeat(7, 1fr);
+            gap: 6px;
+            width: 40px;
+            height: 252px;
+            margin: 0 10px;
+        }
+        .colon-container .pixel {
+            width: 100%;
+            height: 100%;
+        }
+        .date-display {
+            font-size: 28px;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+        .day-display {
+            font-size: 18px;
+            color: #00aa55;
+            letter-spacing: 8px;
+            text-transform: uppercase;
         }
         .controls {
             position: fixed;
@@ -86,39 +101,42 @@
             right: 20px;
             display: flex;
             justify-content: space-between;
-            z-index: 100;
+            z-index: 110;
             opacity: 0;
             transition: opacity 0.3s;
         }
         body:hover .controls { opacity: 1; }
         .back-btn, .fullscreen-btn {
-            background: rgba(0,255,136,0.1);
+            background: rgba(0,255,136,0.08);
             color: #00ff88;
             padding: 10px 20px;
-            border: 1px solid rgba(0,255,136,0.3);
-            border-radius: 5px;
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             backdrop-filter: blur(10px);
             text-decoration: none;
+            transition: all 0.2s;
         }
         .back-btn:hover, .fullscreen-btn:hover {
-            background: rgba(0,255,136,0.2);
+            background: rgba(0,255,136,0.15);
+            border-color: rgba(0,255,136,0.4);
         }
         .watermark {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            color: rgba(0,255,136,0.3);
+            color: rgba(0,255,136,0.2);
             font-size: 14px;
             font-family: monospace;
-            z-index: 100;
+            z-index: 110;
             pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <div class="scanline"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
     <div class="controls">
         <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
@@ -127,6 +145,7 @@
     <div class="clock-container">
         <div class="pixel-time" id="pixelTime"></div>
         <div class="date-display" id="date"></div>
+        <div class="day-display" id="day"></div>
     </div>
     <script>
         const digitPatterns = {
@@ -143,16 +162,13 @@
             ':': [0,0,0,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,0,0,0]
         };
 
-        const colors = ['green', 'blue', 'purple', 'orange'];
-        let currentColor = 0;
-
-        function createDigit(char, colorClass) {
+        function createDigit(char) {
             const container = document.createElement('div');
             container.className = 'pixel-digit';
             const pattern = digitPatterns[char];
             for (let i = 0; i < 35; i++) {
                 const pixel = document.createElement('div');
-                pixel.className = 'pixel' + (pattern[i] ? ` on ${colorClass}` : '');
+                pixel.className = 'pixel' + (pattern[i] ? ' on' : '');
                 container.appendChild(pixel);
             }
             return container;
@@ -160,11 +176,11 @@
 
         function createColon() {
             const container = document.createElement('div');
-            container.className = 'colon';
+            container.className = 'colon-container';
             const pattern = digitPatterns[':'];
             for (let i = 0; i < 35; i++) {
                 const pixel = document.createElement('div');
-                pixel.className = 'pixel' + (pattern[i] ? ' on orange' : '');
+                pixel.className = 'pixel' + (pattern[i] ? ' on' : '');
                 container.appendChild(pixel);
             }
             return container;
@@ -179,20 +195,20 @@
             const timeContainer = document.getElementById('pixelTime');
             timeContainer.innerHTML = '';
 
-            const colorClass = colors[currentColor];
-            currentColor = (currentColor + 1) % colors.length;
-
-            timeContainer.appendChild(createDigit(hours[0], colorClass));
-            timeContainer.appendChild(createDigit(hours[1], colorClass));
+            timeContainer.appendChild(createDigit(hours[0]));
+            timeContainer.appendChild(createDigit(hours[1]));
             timeContainer.appendChild(createColon());
-            timeContainer.appendChild(createDigit(minutes[0], colorClass));
-            timeContainer.appendChild(createDigit(minutes[1], colorClass));
+            timeContainer.appendChild(createDigit(minutes[0]));
+            timeContainer.appendChild(createDigit(minutes[1]));
             timeContainer.appendChild(createColon());
-            timeContainer.appendChild(createDigit(seconds[0], colorClass));
-            timeContainer.appendChild(createDigit(seconds[1], colorClass));
+            timeContainer.appendChild(createDigit(seconds[0]));
+            timeContainer.appendChild(createDigit(seconds[1]));
 
-            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options).toUpperCase();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
+
+            const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            document.getElementById('day').textContent = days[now.getDay()];
         }
 
         updateClock();
