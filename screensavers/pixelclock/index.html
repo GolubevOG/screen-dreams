@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; }
         body {
-            background: #0a0a12;
+            background: #050508;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -23,10 +23,10 @@
             height: 100%;
             background: repeating-linear-gradient(
                 0deg,
-                rgba(0, 0, 0, 0.15) 0px,
-                rgba(0, 0, 0, 0.15) 1px,
+                rgba(0, 0, 0, 0.2) 0px,
+                rgba(0, 0, 0, 0.2) 1px,
                 transparent 1px,
-                transparent 4px
+                transparent 5px
             );
             pointer-events: none;
             z-index: 100;
@@ -37,61 +37,89 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
             pointer-events: none;
             z-index: 99;
+        }
+        .glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 40vh;
+            background: radial-gradient(ellipse, rgba(0, 255, 136, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
         }
         .clock-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
+            gap: 5vh;
+            z-index: 10;
         }
         .pixel-time {
             display: flex;
-            gap: 20px;
+            gap: 3vw;
             align-items: center;
         }
         .pixel-digit {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(7, 1fr);
-            gap: 6px;
-            width: 180px;
-            height: 252px;
+            gap: clamp(3px, 0.8vw, 8px);
+            width: clamp(80px, 18vw, 200px);
+            height: clamp(112px, 25vw, 280px);
         }
         .pixel {
-            background: #111118;
-            border-radius: 4px;
-            transition: background 0.15s, box-shadow 0.15s;
+            background: #0a0a10;
+            border-radius: clamp(2px, 0.4vw, 5px);
+            transition: all 0.15s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
         }
         .pixel.on {
             background: #00ff88;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6), inset 0 0 8px rgba(0, 255, 136, 0.3);
+            box-shadow:
+                0 0 clamp(5px, 1vw, 15px) rgba(0, 255, 136, 0.6),
+                0 0 clamp(10px, 2vw, 30px) rgba(0, 255, 136, 0.3),
+                inset 0 0 clamp(3px, 0.5vw, 8px) rgba(0, 255, 136, 0.4);
         }
         .colon-container {
             display: grid;
             grid-template-rows: repeat(7, 1fr);
-            gap: 6px;
-            width: 40px;
-            height: 252px;
-            margin: 0 10px;
+            gap: clamp(3px, 0.8vw, 8px);
+            width: clamp(30px, 5vw, 60px);
+            height: clamp(112px, 25vw, 280px);
+            margin: 0 clamp(5px, 1vw, 15px);
         }
         .colon-container .pixel {
             width: 100%;
             height: 100%;
         }
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(8px, 1.5vh, 16px);
+        }
         .date-display {
-            font-size: 28px;
+            font-size: clamp(16px, 3vw, 32px);
             color: #00ff88;
             text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-            letter-spacing: 5px;
+            letter-spacing: clamp(3px, 0.8vw, 8px);
             text-transform: uppercase;
         }
         .day-display {
-            font-size: 18px;
+            font-size: clamp(12px, 2vw, 22px);
             color: #00aa55;
-            letter-spacing: 8px;
+            letter-spacing: clamp(5px, 1vw, 12px);
+            text-transform: uppercase;
+        }
+        .time-words {
+            font-size: clamp(10px, 1.5vw, 16px);
+            color: #006633;
+            letter-spacing: 5px;
             text-transform: uppercase;
         }
         .controls {
@@ -107,10 +135,10 @@
         }
         body:hover .controls { opacity: 1; }
         .back-btn, .fullscreen-btn {
-            background: rgba(0,255,136,0.08);
+            background: rgba(0,255,136,0.06);
             color: #00ff88;
             padding: 10px 20px;
-            border: 1px solid rgba(0,255,136,0.2);
+            border: 1px solid rgba(0,255,136,0.15);
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
@@ -119,14 +147,14 @@
             transition: all 0.2s;
         }
         .back-btn:hover, .fullscreen-btn:hover {
-            background: rgba(0,255,136,0.15);
-            border-color: rgba(0,255,136,0.4);
+            background: rgba(0,255,136,0.12);
+            border-color: rgba(0,255,136,0.3);
         }
         .watermark {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            color: rgba(0,255,136,0.2);
+            color: rgba(0,255,136,0.15);
             font-size: 14px;
             font-family: monospace;
             z-index: 110;
@@ -137,6 +165,7 @@
 <body>
     <div class="scanlines"></div>
     <div class="vignette"></div>
+    <div class="glow"></div>
     <div class="controls">
         <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
@@ -144,8 +173,11 @@
     <div class="watermark">GolubevOG</div>
     <div class="clock-container">
         <div class="pixel-time" id="pixelTime"></div>
-        <div class="date-display" id="date"></div>
-        <div class="day-display" id="day"></div>
+        <div class="info-panel">
+            <div class="date-display" id="date"></div>
+            <div class="day-display" id="day"></div>
+            <div class="time-words" id="timeWords"></div>
+        </div>
     </div>
     <script>
         const digitPatterns = {
@@ -186,6 +218,31 @@
             return container;
         }
 
+        function getTimeWords(hours, minutes) {
+            const h = parseInt(hours);
+            const m = parseInt(minutes);
+
+            const hourWords = [
+                'двенадцать', 'один', 'два', 'три', 'четыре', 'пять',
+                'шесть', 'семь', 'восемь', 'девять', 'десять', 'одиннадцать'
+            ];
+
+            let period = '';
+            if (m < 5) period = 'ровно';
+            else if (m < 15) period = 'пять минут';
+            else if (m < 20) period = 'десять минут';
+            else if (m < 25) period = 'четверть';
+            else if (m < 30) period = 'двадцать минут';
+            else if (m < 35) period = 'двадцать пять минут';
+            else if (m < 40) period = 'половина';
+            else if (m < 45) period = 'тридцать пять минут';
+            else if (m < 50) period = 'сорок минут';
+            else if (m < 55) period = 'сорок пять минут';
+            else period = 'без пятнадцати';
+
+            return `${period}`;
+        }
+
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -209,6 +266,8 @@
 
             const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
             document.getElementById('day').textContent = days[now.getDay()];
+
+            document.getElementById('timeWords').textContent = getTimeWords(hours, minutes);
         }
 
         updateClock();
