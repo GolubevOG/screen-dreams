@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrbitClock</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #000; overflow: hidden; }
+        canvas { display: block; }
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        body:hover .controls { opacity: 1; }
+        .back-btn, .fullscreen-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        .back-btn:hover, .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.3);
+            font-size: 14px;
+            font-family: monospace;
+            z-index: 100;
+            pointer-events: none;
+        }
+        .time-display {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+        .date-display {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <a href="../../index.html" class="back-btn">&#8592; Назад к галерее</a>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">&#9974; Полный экран</button>
+    </div>
+    <div class="watermark">GolubevOG</div>
+    <canvas id="canvas"></canvas>
+    <div class="time-display" id="time"></div>
+    <div class="date-display" id="date"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const planets = [
+            { name: 'Секунды', color: '#ff6b6b', radius: 80, speed: 6, size: 6, orbitWidth: 1 },
+            { name: 'Минуты', color: '#4ecdc4', radius: 130, speed: 0.1, size: 8, orbitWidth: 1.5 },
+            { name: 'Часы', color: '#45b7d1', radius: 180, speed: 0.0083, size: 10, orbitWidth: 2 },
+            { name: 'Дни', color: '#96ceb4', radius: 230, speed: 0.0003, size: 12, orbitWidth: 2.5 },
+        ];
+
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5,
+                brightness: Math.random()
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + star.brightness * 0.7})`;
+                ctx.fill();
+            });
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            const sunGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 25);
+            sunGradient.addColorStop(0, '#fff');
+            sunGradient.addColorStop(0.3, '#ffd700');
+            sunGradient.addColorStop(0.7, '#ff8c00');
+            sunGradient.addColorStop(1, 'transparent');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 25, 0, Math.PI * 2);
+            ctx.fillStyle = sunGradient;
+            ctx.fill();
+
+            const sunGlow = ctx.createRadialGradient(centerX, centerY, 20, centerX, centerY, 60);
+            sunGlow.addColorStop(0, 'rgba(255, 200, 0, 0.3)');
+            sunGlow.addColorStop(1, 'transparent');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
+            ctx.fillStyle = sunGlow;
+            ctx.fill();
+
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+
+            const times = [seconds, minutes, hours, dayOfYear];
+
+            planets.forEach((planet, index) => {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, planet.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 255, 255, 0.1)`;
+                ctx.lineWidth = planet.orbitWidth;
+                ctx.stroke();
+
+                const angle = (times[index] / (index === 0 ? 60 : index === 1 ? 60 : index === 2 ? 12 : 365)) * Math.PI * 2 - Math.PI / 2;
+                const planetX = centerX + Math.cos(angle) * planet.radius;
+                const planetY = centerY + Math.sin(angle) * planet.radius;
+
+                const planetGlow = ctx.createRadialGradient(planetX, planetY, 0, planetX, planetY, planet.size * 3);
+                planetGlow.addColorStop(0, planet.color);
+                planetGlow.addColorStop(1, 'transparent');
+                ctx.beginPath();
+                ctx.arc(planetX, planetY, planet.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = planetGlow;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(planetX, planetY, planet.size, 0, Math.PI * 2);
+                ctx.fillStyle = planet.color;
+                ctx.fill();
+
+                ctx.font = '10px Courier New';
+                ctx.fillStyle = planet.color;
+                ctx.textAlign = 'center';
+                ctx.fillText(planet.name, planetX, planetY - planet.size - 10);
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        function updateText() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
+        }
+
+        draw();
+        updateText();
+        setInterval(updateText, 1000);
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    window.location.href = '../../index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
