@@ -257,6 +257,87 @@ body {
     border-top: 1px solid #1a1a2e;
 }
 
+.tooltip {
+    position: fixed;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    max-width: 250px;
+    line-height: 1.4;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2a3e;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tooltip.visible {
+    opacity: 1;
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+}
+
+.favorite-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.favorite-btn.active {
+    color: #ff4757;
+}
+
+.filter-favorite {
+    padding: 6px 14px;
+    border: 1px solid #ff475733;
+    border-radius: 20px;
+    background: transparent;
+    color: #ff4757;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-favorite:hover,
+.filter-favorite.active {
+    background: #ff475722;
+    border-color: #ff4757;
+}
+
+.card__info {
+    padding: 16px 20px;
+    position: relative;
+}
+
+.card__name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+    cursor: help;
+    border-bottom: 1px dashed #333;
+    display: inline-block;
+}
+
 @media (max-width: 768px) {
     .header__title {
         font-size: 2rem;
@@ -264,6 +345,96 @@ body {
 
     .gallery {
         grid-template-columns: 1fr;
-        padding: 20px;
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .toolbar {
+        padding: 16px;
+    }
+
+    .filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #333 transparent;
+    }
+
+    .filters::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .filters::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .filters::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 2px;
+    }
+
+    .filter-btn,
+    .filter-reset,
+    .filter-favorite {
+        padding: 10px 16px;
+        min-height: 44px;
+        font-size: 0.85rem;
+    }
+
+    .search-sort {
+        flex-direction: column;
+    }
+
+    .search,
+    .sort,
+    .random-btn {
+        width: 100%;
+        min-height: 44px;
+        font-size: 1rem;
+    }
+
+    .random-btn {
+        font-size: 1.4rem;
+    }
+
+    .card {
+        min-height: 300px;
+    }
+
+    .card__name {
+        font-size: 1.1rem;
+    }
+
+    .card__description {
+        font-size: 0.9rem;
+    }
+
+    .favorite-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
+
+    .back-btn,
+    .fullscreen-btn {
+        min-height: 44px;
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header__title {
+        font-size: 1.6rem;
+    }
+
+    .header__subtitle {
+        font-size: 0.9rem;
+    }
+
+    .gallery {
+        padding: 12px;
+        gap: 12px;
     }
 }

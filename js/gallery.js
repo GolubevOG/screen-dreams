@@ -2,9 +2,12 @@ let allScreensavers = [];
 let activeFilters = new Set();
 let currentSort = 'name-asc';
 let searchQuery = '';
+let showFavoritesOnly = false;
+const favorites = JSON.parse(localStorage.getItem('screenDreamsFavorites') || '[]');
 const activeAnimations = new Map();
 const FPS = 15;
 const FRAME_TIME = 1000 / FPS;
+let tooltip = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const gallery = document.getElementById('gallery');
@@ -56,6 +59,7 @@ function renderFilters() {
     });
 
     html += `<button class="filter-reset" id="filterReset">Сбросить все</button>`;
+    html += `<button class="filter-favorite ${showFavoritesOnly ? 'active' : ''}" id="filterFavorite">❤️ Избранное</button>`;
 
     filtersContainer.innerHTML = html;
 
@@ -64,6 +68,64 @@ function renderFilters() {
     });
 
     document.getElementById('filterReset').addEventListener('click', resetFilters);
+    document.getElementById('filterFavorite').addEventListener('click', toggleFavoritesFilter);
+}
+
+function toggleFavorite(id) {
+    const index = favorites.indexOf(id);
+    if (index > -1) {
+        favorites.splice(index, 1);
+    } else {
+        favorites.push(id);
+    }
+    localStorage.setItem('screenDreamsFavorites', JSON.stringify(favorites));
+    updateFavoriteButtons();
+}
+
+function updateFavoriteButtons() {
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        const id = btn.dataset.id;
+        const isFavorite = favorites.includes(id);
+        btn.classList.toggle('active', isFavorite);
+        btn.textContent = isFavorite ? '❤️' : '🤍';
+    });
+    document.getElementById('filterFavorite').classList.toggle('active', showFavoritesOnly);
+}
+
+function toggleFavoritesFilter() {
+    showFavoritesOnly = !showFavoritesOnly;
+    document.getElementById('filterFavorite').classList.toggle('active', showFavoritesOnly);
+    applyFilters();
+}
+
+function showTooltip(e, text) {
+    hideTooltip();
+    tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = text;
+    document.body.appendChild(tooltip);
+
+    const rect = e.target.getBoundingClientRect();
+    let x = rect.left;
+    let y = rect.bottom + 8;
+
+    if (x + 250 > window.innerWidth) {
+        x = window.innerWidth - 260;
+    }
+    if (y + 60 > window.innerHeight) {
+        y = rect.top - 60;
+    }
+
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+    requestAnimationFrame(() => tooltip.classList.add('visible'));
+}
+
+function hideTooltip() {
+    if (tooltip) {
+        tooltip.remove();
+        tooltip = null;
+    }
 }
 
 function toggleFilter(tag) {
@@ -91,6 +153,10 @@ function updateFilterUI() {
 
 function applyFilters() {
     let filtered = allScreensavers;
+
+    if (showFavoritesOnly) {
+        filtered = filtered.filter(screensaver => favorites.includes(screensaver.id));
+    }
 
     if (activeFilters.size > 0) {
         filtered = filtered.filter(screensaver => {
@@ -175,27 +241,40 @@ function createCard(screensaver) {
     card.className = 'card';
     card.setAttribute('data-screensaver', screensaver.id);
 
+    const isFavorite = favorites.includes(screensaver.id);
+
     const tagsHTML = screensaver.tags
         .map(tag => `<span class="card__tag">${tag}</span>`)
         .join('');
 
     card.innerHTML = `
         <div class="card__preview" id="preview-${screensaver.id}">
+            <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${screensaver.id}" title="В избранное">${isFavorite ? '❤️' : '🤍'}</button>
             <span class="card__preview-placeholder">Загрузка...</span>
         </div>
         <div class="card__info">
-            <h2 class="card__name">${screensaver.name}</h2>
+            <h2 class="card__name" data-tooltip="${screensaver.description}">${screensaver.name}</h2>
             <p class="card__description">${screensaver.description}</p>
             <div class="card__tags">${tagsHTML}</div>
         </div>
     `;
 
+    card.querySelector('.favorite-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(screensaver.id);
+    });
+
     card.addEventListener('mouseenter', () => startPreviewAnimation(screensaver));
     card.addEventListener('mouseleave', () => stopPreviewAnimation(screensaver.id));
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+        if (e.target.closest('.favorite-btn')) return;
         stopPreviewAnimation(screensaver.id);
         window.location.href = screensaver.path;
     });
+
+    const nameEl = card.querySelector('.card__name');
+    nameEl.addEventListener('mouseenter', (e) => showTooltip(e, screensaver.description));
+    nameEl.addEventListener('mouseleave', hideTooltip);
 
     return card;
 }
