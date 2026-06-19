@@ -350,6 +350,15 @@
       "path": "screensavers/meteor/",
       "tags": ["meteor", "space", "flight"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "waterfall",
+      "name": "Waterfall",
+      "description": "Водопад с брызгами и спокойным бассейном",
+      "preview": "images/previews/waterfall.png",
+      "path": "screensavers/waterfall/",
+      "tags": ["waterfall", "water", "nature"],
+      "technology": "canvas2d"
     }
   ]
 }

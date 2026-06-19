@@ -419,7 +419,8 @@ function startPreviewAnimation(screensaver) {
         starclock: animateStarClock,
         analogclock: animateAnalogClock,
         forest: animateForest,
-        meteor: animateMeteor
+        meteor: animateMeteor,
+        waterfall: animateWaterfall
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -539,6 +540,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'meteor':
             drawMeteorPreview(ctx, w, h);
+            break;
+        case 'waterfall':
+            drawWaterfallPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1047,6 +1051,33 @@ function drawMeteorPreview(ctx, w, h) {
         ctx.lineWidth = 2;
         ctx.stroke();
     }
+}
+
+function drawWaterfallPreview(ctx, w, h) {
+    const bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#001a33');
+    bg.addColorStop(1, '#002040');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fillRect(w * 0.35 - 15, 0, 15, h * 0.6);
+    ctx.fillRect(w * 0.65, 0, 15, h * 0.6);
+
+    ctx.strokeStyle = 'rgba(100, 180, 255, 0.5)';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 8; i++) {
+        const x = w * 0.4 + Math.random() * w * 0.2;
+        const y = Math.random() * h * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + 15 + Math.random() * 15);
+        ctx.stroke();
+    }
+
+    const poolY = h * 0.75;
+    ctx.fillStyle = 'rgba(0, 50, 100, 0.5)';
+    ctx.fillRect(0, poolY, w, h - poolY);
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -1572,5 +1603,49 @@ function animateMeteor(ctx, w, h, t) {
         ctx.arc(sx, sy, 5, 0, Math.PI * 2);
         ctx.fillStyle = glow;
         ctx.fill();
+    }
+}
+
+function animateWaterfall(ctx, w, h, t) {
+    const bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#001a33');
+    bg.addColorStop(1, '#002040');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fillRect(w * 0.35 - 15, 0, 15, h * 0.6);
+    ctx.fillRect(w * 0.65, 0, 15, h * 0.6);
+
+    for (let i = 0; i < 20; i++) {
+        const x = w * 0.4 + Math.sin(t * 0.02 + i * 0.3) * w * 0.08;
+        const y = ((t * 3 + i * 15) % (h * 0.65));
+        const len = 10 + (i % 4) * 5;
+        const grad = ctx.createLinearGradient(x, y, x, y + len);
+        grad.addColorStop(0, 'rgba(100, 180, 255, 0.1)');
+        grad.addColorStop(0.5, 'rgba(150, 200, 255, 0.5)');
+        grad.addColorStop(1, 'rgba(200, 230, 255, 0.2)');
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + len);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
+
+    const poolY = h * 0.75;
+    ctx.fillStyle = 'rgba(0, 50, 100, 0.4)';
+    ctx.fillRect(0, poolY, w, h - poolY);
+
+    for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, poolY + 5 + i * 8);
+        for (let x = 0; x <= w; x += 5) {
+            const y = poolY + 5 + i * 8 + Math.sin(x * 0.02 + t * 0.03 + i) * 3;
+            ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(100, 180, 255, ${0.15 - i * 0.03})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
     }
 }
