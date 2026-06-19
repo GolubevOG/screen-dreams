@@ -377,6 +377,15 @@
       "path": "screensavers/geometric/",
       "tags": ["geometric", "shapes", "rotate"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "pendulum",
+      "name": "Pendulum",
+      "description": "Физический маятник с золотистыми следами",
+      "preview": "images/previews/pendulum.png",
+      "path": "screensavers/pendulum/",
+      "tags": ["pendulum", "physics", "swing"],
+      "technology": "canvas2d"
     }
   ]
 }

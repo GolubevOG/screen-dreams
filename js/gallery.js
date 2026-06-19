@@ -422,7 +422,8 @@ function startPreviewAnimation(screensaver) {
         meteor: animateMeteor,
         waterfall: animateWaterfall,
         neon: animateNeon,
-        geometric: animateGeometric
+        geometric: animateGeometric,
+        pendulum: animatePendulum
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -551,6 +552,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'geometric':
             drawGeometricPreview(ctx, w, h);
+            break;
+        case 'pendulum':
+            drawPendulumPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1136,6 +1140,40 @@ function drawGeometricPreview(ctx, w, h) {
             ctx.stroke();
         }
     }
+}
+
+function drawPendulumPreview(ctx, w, h) {
+    const pivotX = w / 2;
+    const pivotY = h * 0.2;
+    const length = Math.min(w, h) * 0.35;
+    const angle = Math.PI / 4;
+    const bobX = pivotX + Math.sin(angle) * length;
+    const bobY = pivotY + Math.cos(angle) * length;
+
+    ctx.beginPath();
+    ctx.moveTo(pivotX, pivotY);
+    ctx.lineTo(bobX, bobY);
+    ctx.strokeStyle = 'rgba(200, 170, 80, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(pivotX, pivotY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200, 170, 80, 0.8)';
+    ctx.fill();
+
+    const glow = ctx.createRadialGradient(bobX, bobY, 0, bobX, bobY, 12);
+    glow.addColorStop(0, 'rgba(255, 220, 100, 0.6)');
+    glow.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(bobX, bobY, 12, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(bobX, bobY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#c8aa50';
+    ctx.fill();
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -1786,4 +1824,38 @@ function animateGeometric(ctx, w, h, t) {
             ctx.stroke();
         }
     });
+}
+
+function animatePendulum(ctx, w, h, t) {
+    const pivotX = w / 2;
+    const pivotY = h * 0.2;
+    const length = Math.min(w, h) * 0.35;
+    const angle = Math.PI / 4 * Math.sin(t * 0.03);
+    const bobX = pivotX + Math.sin(angle) * length;
+    const bobY = pivotY + Math.cos(angle) * length;
+
+    ctx.beginPath();
+    ctx.moveTo(pivotX, pivotY);
+    ctx.lineTo(bobX, bobY);
+    ctx.strokeStyle = 'rgba(200, 170, 80, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(pivotX, pivotY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200, 170, 80, 0.8)';
+    ctx.fill();
+
+    const glow = ctx.createRadialGradient(bobX, bobY, 0, bobX, bobY, 15);
+    glow.addColorStop(0, 'rgba(255, 220, 100, 0.6)');
+    glow.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(bobX, bobY, 15, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(bobX, bobY, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#c8aa50';
+    ctx.fill();
 }
