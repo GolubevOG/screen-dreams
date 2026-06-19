@@ -368,6 +368,15 @@
       "path": "screensavers/neon/",
       "tags": ["neon", "glow", "lines"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "geometric",
+      "name": "Geometric",
+      "description": "Вращающиеся геометрические фигуры с градиентами",
+      "preview": "images/previews/geometric.png",
+      "path": "screensavers/geometric/",
+      "tags": ["geometric", "shapes", "rotate"],
+      "technology": "canvas2d"
     }
   ]
 }

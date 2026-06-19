@@ -421,7 +421,8 @@ function startPreviewAnimation(screensaver) {
         forest: animateForest,
         meteor: animateMeteor,
         waterfall: animateWaterfall,
-        neon: animateNeon
+        neon: animateNeon,
+        geometric: animateGeometric
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -547,6 +548,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'neon':
             drawNeonPreview(ctx, w, h);
+            break;
+        case 'geometric':
+            drawGeometricPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1101,6 +1105,36 @@ function drawNeonPreview(ctx, w, h) {
         ctx.shadowColor = color;
         ctx.stroke();
         ctx.shadowBlur = 0;
+    }
+}
+
+function drawGeometricPreview(ctx, w, h) {
+    for (let i = 0; i < 8; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const size = 15 + Math.random() * 30;
+        const hue = Math.random() * 360;
+        ctx.strokeStyle = `hsl(${hue}, 70%, 60%)`;
+        ctx.lineWidth = 2;
+
+        if (i % 3 === 0) {
+            ctx.beginPath();
+            for (let j = 0; j < 3; j++) {
+                const angle = (j / 3) * Math.PI * 2 - Math.PI / 2;
+                const px = x + Math.cos(angle) * size;
+                const py = y + Math.sin(angle) * size;
+                if (j === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        } else if (i % 3 === 1) {
+            ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+        } else {
+            ctx.beginPath();
+            ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+            ctx.stroke();
+        }
     }
 }
 
@@ -1708,4 +1742,48 @@ function animateNeon(ctx, w, h, t) {
 
         ctx.shadowBlur = 0;
     }
+}
+
+function animateGeometric(ctx, w, h, t) {
+    const shapes = [];
+    for (let i = 0; i < 12; i++) {
+        shapes.push({
+            x: (i * 73.7 + Math.sin(t * 0.01 + i) * 30) % w,
+            y: (i * 47.3 + Math.cos(t * 0.008 + i * 0.7) * 30) % h,
+            size: 15 + (i % 4) * 10,
+            rotation: t * 0.02 + i * 0.5,
+            hue: (i * 30 + t) % 360,
+            type: i % 3
+        });
+    }
+
+    shapes.forEach(shape => {
+        ctx.strokeStyle = `hsl(${shape.hue}, 70%, 60%)`;
+        ctx.lineWidth = 2;
+
+        if (shape.type === 0) {
+            ctx.beginPath();
+            for (let j = 0; j < 3; j++) {
+                const angle = (j / 3) * Math.PI * 2 + shape.rotation;
+                const px = shape.x + Math.cos(angle) * shape.size;
+                const py = shape.y + Math.sin(angle) * shape.size;
+                if (j === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        } else if (shape.type === 1) {
+            ctx.save();
+            ctx.translate(shape.x, shape.y);
+            ctx.rotate(shape.rotation);
+            ctx.beginPath();
+            ctx.rect(-shape.size / 2, -shape.size / 2, shape.size, shape.size);
+            ctx.stroke();
+            ctx.restore();
+        } else {
+            ctx.beginPath();
+            ctx.arc(shape.x, shape.y, shape.size / 2, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    });
 }
