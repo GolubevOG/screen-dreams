@@ -424,7 +424,8 @@ function startPreviewAnimation(screensaver) {
         neon: animateNeon,
         geometric: animateGeometric,
         pendulum: animatePendulum,
-        retro: animateRetro
+        retro: animateRetro,
+        crystal: animateCrystal
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -559,6 +560,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'retro':
             drawRetroPreview(ctx, w, h);
+            break;
+        case 'crystal':
+            drawCrystalPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1191,6 +1195,36 @@ function drawRetroPreview(ctx, w, h) {
                 ctx.fillText(char, x, y);
             }
         }
+    }
+}
+
+function drawCrystalPreview(ctx, w, h) {
+    for (let i = 0; i < 5; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const size = 15 + Math.random() * 25;
+        const hue = 200 + Math.random() * 60;
+        const facets = 5 + Math.floor(Math.random() * 3);
+
+        ctx.beginPath();
+        for (let j = 0; j < facets; j++) {
+            const angle = (j / facets) * Math.PI * 2;
+            const r = size * (0.8 + Math.sin(angle * 2) * 0.2);
+            const px = x + Math.cos(angle) * r;
+            const py = y + Math.sin(angle) * r;
+            if (j === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `hsla(${hue}, 60%, 70%, 0.4)`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, size);
+        grad.addColorStop(0, `hsla(${hue}, 60%, 80%, 0.15)`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fill();
     }
 }
 
@@ -1898,4 +1932,58 @@ function animateRetro(ctx, w, h, t) {
             ctx.fillText(char, x, y);
         }
     }
+}
+
+function animateCrystal(ctx, w, h, t) {
+    const crystals = [];
+    for (let i = 0; i < 6; i++) {
+        crystals.push({
+            x: (i * 83.7 + Math.sin(t * 0.008 + i) * 20) % w,
+            y: (i * 57.3 + Math.cos(t * 0.006 + i * 0.7) * 20) % h,
+            size: 15 + (i % 3) * 12,
+            rotation: t * 0.01 + i * 0.8,
+            hue: 200 + (i * 15) % 60,
+            facets: 5 + (i % 3),
+            shimmer: (Math.sin(t * 0.03 + i * 1.5) + 1) / 2
+        });
+    }
+
+    crystals.forEach(crystal => {
+        ctx.save();
+        ctx.translate(crystal.x, crystal.y);
+        ctx.rotate(crystal.rotation);
+
+        ctx.beginPath();
+        for (let j = 0; j < crystal.facets; j++) {
+            const angle = (j / crystal.facets) * Math.PI * 2;
+            const r = crystal.size * (0.8 + Math.sin(angle * 2) * 0.2);
+            const x = Math.cos(angle) * r;
+            const y = Math.sin(angle) * r;
+            if (j === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+
+        ctx.strokeStyle = `hsla(${crystal.hue}, 60%, 70%, ${0.3 + crystal.shimmer * 0.3})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, crystal.size);
+        grad.addColorStop(0, `hsla(${crystal.hue}, 60%, 80%, ${0.1 + crystal.shimmer * 0.1})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        ctx.restore();
+
+        for (let k = 0; k < 2; k++) {
+            const sparkAngle = crystal.shimmer * Math.PI * 2 + k * 2;
+            const sparkX = crystal.x + Math.cos(sparkAngle) * crystal.size * 0.5;
+            const sparkY = crystal.y + Math.sin(sparkAngle) * crystal.size * 0.5;
+            ctx.beginPath();
+            ctx.arc(sparkX, sparkY, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${crystal.hue + 30}, 80%, 90%, ${crystal.shimmer * 0.4})`;
+            ctx.fill();
+        }
+    });
 }

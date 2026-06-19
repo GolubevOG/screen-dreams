@@ -395,6 +395,15 @@
       "path": "screensavers/retro/",
       "tags": ["retro", "8bit", "pixels"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "crystal",
+      "name": "Crystal",
+      "description": "Кристаллы с преломлением и мерцанием",
+      "preview": "images/previews/crystal.png",
+      "path": "screensavers/crystal/",
+      "tags": ["crystal", "sparkle", "折射"],
+      "technology": "canvas2d"
     }
   ]
 }
