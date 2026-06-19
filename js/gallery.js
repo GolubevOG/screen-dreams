@@ -423,7 +423,8 @@ function startPreviewAnimation(screensaver) {
         waterfall: animateWaterfall,
         neon: animateNeon,
         geometric: animateGeometric,
-        pendulum: animatePendulum
+        pendulum: animatePendulum,
+        retro: animateRetro
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -555,6 +556,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'pendulum':
             drawPendulumPreview(ctx, w, h);
+            break;
+        case 'retro':
+            drawRetroPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1174,6 +1178,20 @@ function drawPendulumPreview(ctx, w, h) {
     ctx.arc(bobX, bobY, 6, 0, Math.PI * 2);
     ctx.fillStyle = '#c8aa50';
     ctx.fill();
+}
+
+function drawRetroPreview(ctx, w, h) {
+    const chars = '01アイウエオ';
+    ctx.font = '8px monospace';
+    for (let x = 0; x < w; x += 8) {
+        for (let y = 0; y < h; y += 12) {
+            if (Math.random() > 0.7) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillStyle = `rgba(0, 255, 0, ${0.2 + Math.random() * 0.5})`;
+                ctx.fillText(char, x, y);
+            }
+        }
+    }
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -1858,4 +1876,26 @@ function animatePendulum(ctx, w, h, t) {
     ctx.arc(bobX, bobY, 8, 0, Math.PI * 2);
     ctx.fillStyle = '#c8aa50';
     ctx.fill();
+}
+
+function animateRetro(ctx, w, h, t) {
+    const pixelSize = 8;
+    const chars = '01アイウエオカキクケコ';
+    ctx.font = `${pixelSize}px monospace`;
+
+    for (let x = 0; x < w; x += pixelSize) {
+        for (let i = 0; i < 3; i++) {
+            const y = ((t * 2 + x * 0.3 + i * 50) % (h + 20)) - 10;
+            const char = chars[Math.floor((x + t) % chars.length)];
+            const brightness = Math.random();
+            if (brightness > 0.7) {
+                ctx.fillStyle = '#0f0';
+            } else if (brightness > 0.4) {
+                ctx.fillStyle = '#0a0';
+            } else {
+                ctx.fillStyle = '#050';
+            }
+            ctx.fillText(char, x, y);
+        }
+    }
 }

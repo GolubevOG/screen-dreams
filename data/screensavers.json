@@ -386,6 +386,15 @@
       "path": "screensavers/pendulum/",
       "tags": ["pendulum", "physics", "swing"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "retro",
+      "name": "Retro",
+      "description": "Падающие пиксели в стиле 8-bit игр",
+      "preview": "images/previews/retro.png",
+      "path": "screensavers/retro/",
+      "tags": ["retro", "8bit", "pixels"],
+      "technology": "canvas2d"
     }
   ]
 }
