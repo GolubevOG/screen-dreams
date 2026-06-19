@@ -417,7 +417,8 @@ function startPreviewAnimation(screensaver) {
         gravityclock: animateGravityClock,
         orbitclock: animateOrbitClock,
         starclock: animateStarClock,
-        analogclock: animateAnalogClock
+        analogclock: animateAnalogClock,
+        forest: animateForest
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -531,6 +532,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'analogclock':
             drawAnalogClockPreview(ctx, w, h);
+            break;
+        case 'forest':
+            drawForestPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -986,6 +990,35 @@ function drawDefaultPreview(ctx, w, h, id) {
     ctx.fillText(id, w / 2, h / 2);
 }
 
+function drawForestPreview(ctx, w, h) {
+    const groundY = h * 0.85;
+    ctx.fillStyle = '#0a1a0a';
+    ctx.fillRect(0, groundY, w, h - groundY);
+    for (let i = 0; i < 12; i++) {
+        const x = (i / 12) * w + Math.random() * 30;
+        const th = 40 + Math.random() * 80;
+        const tw = 15 + Math.random() * 25;
+        ctx.fillStyle = `rgb(${10 + Math.random() * 20}, ${40 + Math.random() * 30}, ${15 + Math.random() * 15})`;
+        ctx.beginPath();
+        ctx.moveTo(x, groundY - th);
+        ctx.lineTo(x - tw / 2, groundY);
+        ctx.lineTo(x + tw / 2, groundY);
+        ctx.closePath();
+        ctx.fill();
+    }
+    for (let i = 0; i < 10; i++) {
+        const x = Math.random() * w;
+        const y = groundY - 30 - Math.random() * 80;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 6);
+        g.addColorStop(0, 'rgba(255, 255, 100, 0.6)');
+        g.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(x, y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+    }
+}
+
 function animateMatrix(ctx, w, h, t) {
     const chars = 'アイウエオカキクケコサシスセソタチツテト0123456789';
     ctx.font = '12px monospace';
@@ -1425,4 +1458,49 @@ function animateAnalogClock(ctx, w, h, t) {
     ctx.strokeStyle = 'rgba(180, 140, 80, 0.9)';
     ctx.lineWidth = 3;
     ctx.stroke();
+}
+
+function animateForest(ctx, w, h, t) {
+    const groundY = h * 0.85;
+    ctx.fillStyle = '#0a1a0a';
+    ctx.fillRect(0, groundY, w, h - groundY);
+
+    for (let i = 0; i < 15; i++) {
+        const x = (i / 15) * w + Math.sin(t * 0.01 + i) * 5;
+        const th = 50 + (i % 3) * 40;
+        const tw = 18 + (i % 2) * 10;
+        ctx.fillStyle = `rgb(${10 + i * 2}, ${35 + i * 3}, ${15 + i})`;
+        ctx.beginPath();
+        ctx.moveTo(x, groundY - th);
+        ctx.lineTo(x - tw / 2, groundY);
+        ctx.lineTo(x + tw / 2, groundY);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    for (let i = 0; i < 3; i++) {
+        const fogY = groundY - 50 + i * 25;
+        const gradient = ctx.createLinearGradient(0, fogY, 0, fogY + 60);
+        gradient.addColorStop(0, 'transparent');
+        gradient.addColorStop(0.5, `rgba(80, 120, 80, ${0.05 - i * 0.01})`);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(Math.sin(t * 0.008 + i) * 40 - 30, fogY, w + 60, 60);
+    }
+
+    for (let i = 0; i < 20; i++) {
+        const seed = i * 73.7;
+        const baseX = (seed * 13.37) % w;
+        const baseY = groundY - 20 - (seed * 7.13) % 120;
+        const x = baseX + Math.sin(t * 0.015 + seed) * 8;
+        const y = baseY + Math.cos(t * 0.012 + seed * 0.7) * 5;
+        const alpha = (Math.sin(t * 0.05 + seed) + 1) / 2;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 5);
+        g.addColorStop(0, `rgba(255, 255, 100, ${alpha * 0.5})`);
+        g.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = g;
+        ctx.fill();
+    }
 }

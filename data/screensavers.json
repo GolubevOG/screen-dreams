@@ -332,6 +332,15 @@
       "path": "screensavers/analogclock/",
       "tags": ["analog", "classic", "elegant"],
       "technology": "html"
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "description": "Лес с туманом и мерцающими огоньками",
+      "preview": "images/previews/forest.png",
+      "path": "screensavers/forest/",
+      "tags": ["forest", "nature", "fog"],
+      "technology": "canvas2d"
     }
   ]
 }
