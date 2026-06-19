@@ -404,6 +404,15 @@
       "path": "screensavers/crystal/",
       "tags": ["crystal", "sparkle", "折射"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "thunder",
+      "name": "Thunder",
+      "description": "Гроза с молниями и дождём",
+      "preview": "images/previews/thunder.png",
+      "path": "screensavers/thunder/",
+      "tags": ["thunder", "storm", "rain"],
+      "technology": "canvas2d"
     }
   ]
 }

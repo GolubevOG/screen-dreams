@@ -425,7 +425,8 @@ function startPreviewAnimation(screensaver) {
         geometric: animateGeometric,
         pendulum: animatePendulum,
         retro: animateRetro,
-        crystal: animateCrystal
+        crystal: animateCrystal,
+        thunder: animateThunder
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -563,6 +564,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'crystal':
             drawCrystalPreview(ctx, w, h);
+            break;
+        case 'thunder':
+            drawThunderPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1226,6 +1230,35 @@ function drawCrystalPreview(ctx, w, h) {
         ctx.fillStyle = grad;
         ctx.fill();
     }
+}
+
+function drawThunderPreview(ctx, w, h) {
+    ctx.fillStyle = '#001020';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.strokeStyle = 'rgba(100, 150, 255, 0.4)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 30; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - 1, y + 10 + Math.random() * 15);
+        ctx.stroke();
+    }
+
+    let x = w * 0.3 + Math.random() * w * 0.4;
+    let y = 0;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    while (y < h * 0.6) {
+        x += (Math.random() - 0.5) * 30;
+        y += 8 + Math.random() * 15;
+        ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(200, 200, 255, 0.7)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -1986,4 +2019,40 @@ function animateCrystal(ctx, w, h, t) {
             ctx.fill();
         }
     });
+}
+
+function animateThunder(ctx, w, h, t) {
+    ctx.fillStyle = 'rgba(0, 5, 20, 0.3)';
+    ctx.fillRect(0, 0, w, h);
+
+    for (let i = 0; i < 80; i++) {
+        const x = (i * 11.3) % w;
+        const y = (i * 7.7 + t * 4) % h;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - 1, y + 8 + (i % 3) * 4);
+        ctx.strokeStyle = 'rgba(100, 150, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    if (t % 90 < 3) {
+        for (let b = 0; b < 2; b++) {
+            let x = w * 0.2 + Math.random() * w * 0.6;
+            let y = 0;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            while (y < h * 0.6) {
+                x += (Math.random() - 0.5) * 30;
+                y += 8 + Math.random() * 15;
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'rgba(200, 200, 255, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = 'rgba(100, 150, 255, 0.08)';
+        ctx.fillRect(0, 0, w, h);
+    }
 }
