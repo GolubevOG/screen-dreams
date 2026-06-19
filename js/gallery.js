@@ -3,11 +3,19 @@ let activeFilters = new Set(JSON.parse(localStorage.getItem('screenDreamsFilters
 let currentSort = localStorage.getItem('screenDreamsSort') || 'name-asc';
 let searchQuery = localStorage.getItem('screenDreamsSearch') || '';
 let showFavoritesOnly = localStorage.getItem('screenDreamsFavoritesOnly') === 'true';
-const favorites = JSON.parse(localStorage.getItem('screenDreamsFavorites') || '[]');
+let favorites = JSON.parse(localStorage.getItem('screenDreamsFavorites') || '[]');
 const activeAnimations = new Map();
 const FPS = 15;
 const FRAME_TIME = 1000 / FPS;
 let tooltip = null;
+
+const CATEGORY_TAG_MAP = {
+    '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid', 'meteor'],
+    '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies', 'forest', 'waterfall', 'thunder', 'sakura'],
+    '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti', 'neon', 'geometric', 'retro', 'crystal'],
+    '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
+    '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework', 'pendulum']
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
     const gallery = document.getElementById('gallery');
@@ -42,16 +50,8 @@ function saveScrollPosition() {
 function renderFilters() {
     const filtersContainer = document.getElementById('filters');
 
-    const categories = {
-        '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid'],
-        '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies'],
-        '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti'],
-        '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
-        '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework']
-    };
-
     const categoryCounts = {};
-    Object.entries(categories).forEach(([category, tags]) => {
+    Object.entries(CATEGORY_TAG_MAP).forEach(([category, tags]) => {
         let count = 0;
         allScreensavers.forEach(screensaver => {
             if (tags.some(tag => screensaver.tags.includes(tag))) {
@@ -166,6 +166,10 @@ function updateFilterUI() {
     if (filterFavorite) {
         filterFavorite.classList.toggle('active', showFavoritesOnly);
     }
+    const filterReset = document.getElementById('filterReset');
+    if (filterReset) {
+        filterReset.classList.toggle('visible', activeFilters.size > 0);
+    }
 }
 
 function applyFilters() {
@@ -176,17 +180,9 @@ function applyFilters() {
     }
 
     if (activeFilters.size > 0) {
-        const categoryTagMap = {
-            '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid'],
-            '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies'],
-            '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti'],
-            '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
-            '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework']
-        };
-
         filtered = filtered.filter(screensaver => {
             return [...activeFilters].some(category => {
-                const tags = categoryTagMap[category] || [];
+                const tags = CATEGORY_TAG_MAP[category] || [];
                 return tags.some(tag => screensaver.tags.includes(tag));
             });
         });
@@ -399,6 +395,7 @@ function startPreviewAnimation(screensaver) {
     const previewFunctions = {
         matrix: animateMatrix,
         particles: animateParticles,
+        starfield: animateStarfield,
         snow: animateSnow,
         rain: animateRain,
         fire: animateFire,
@@ -1000,6 +997,24 @@ function animateMatrix(ctx, w, h, t) {
         ctx.fillText(char, x, y);
     }
     ctx.globalAlpha = 1;
+}
+
+function animateStarfield(ctx, w, h, t) {
+    const cx = w / 2;
+    const cy = h / 2;
+    for (let i = 0; i < 80; i++) {
+        const seed = i * 137.508;
+        const angle = seed % (Math.PI * 2);
+        const dist = ((seed + t * 0.8) % Math.max(w, h));
+        const x = cx + Math.cos(angle) * dist;
+        const y = cy + Math.sin(angle) * dist;
+        const r = Math.max(0.3, 2 - dist / Math.max(w, h) * 2);
+        const alpha = Math.max(0, 1 - dist / Math.max(w, h));
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fill();
+    }
 }
 
 function animateParticles(ctx, w, h, t) {
