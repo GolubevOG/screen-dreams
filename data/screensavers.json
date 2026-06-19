@@ -359,6 +359,15 @@
       "path": "screensavers/waterfall/",
       "tags": ["waterfall", "water", "nature"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "neon",
+      "name": "Neon",
+      "description": "Неоновые полосы, пульсирующие в темноте",
+      "preview": "images/previews/neon.png",
+      "path": "screensavers/neon/",
+      "tags": ["neon", "glow", "lines"],
+      "technology": "canvas2d"
     }
   ]
 }

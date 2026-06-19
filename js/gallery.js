@@ -420,7 +420,8 @@ function startPreviewAnimation(screensaver) {
         analogclock: animateAnalogClock,
         forest: animateForest,
         meteor: animateMeteor,
-        waterfall: animateWaterfall
+        waterfall: animateWaterfall,
+        neon: animateNeon
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -543,6 +544,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'waterfall':
             drawWaterfallPreview(ctx, w, h);
+            break;
+        case 'neon':
+            drawNeonPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1078,6 +1082,26 @@ function drawWaterfallPreview(ctx, w, h) {
     const poolY = h * 0.75;
     ctx.fillStyle = 'rgba(0, 50, 100, 0.5)';
     ctx.fillRect(0, poolY, w, h - poolY);
+}
+
+function drawNeonPreview(ctx, w, h) {
+    const colors = ['#ff00ff', '#00ffff', '#ff0080', '#0080ff', '#8000ff'];
+    for (let i = 0; i < 8; i++) {
+        const y = (i / 8) * h;
+        const color = colors[i % colors.length];
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        for (let x = 0; x <= w; x += 3) {
+            const yOff = Math.sin(x * 0.01 + i) * 10;
+            ctx.lineTo(x, y + yOff);
+        }
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = color;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -1647,5 +1671,41 @@ function animateWaterfall(ctx, w, h, t) {
         ctx.strokeStyle = `rgba(100, 180, 255, ${0.15 - i * 0.03})`;
         ctx.lineWidth = 1;
         ctx.stroke();
+    }
+}
+
+function animateNeon(ctx, w, h, t) {
+    const neonColors = [
+        [255, 0, 255],
+        [0, 255, 255],
+        [255, 0, 128],
+        [0, 128, 255],
+        [128, 0, 255]
+    ];
+
+    for (let i = 0; i < 10; i++) {
+        const y = (i / 10) * h;
+        const color = neonColors[i % neonColors.length];
+        const alpha = 0.3 + Math.sin(t * 0.02 + i * 0.8) * 0.25;
+
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * 0.5})`;
+
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        for (let x = 0; x <= w; x += 3) {
+            const yOff = Math.sin(x * 0.01 + t * 0.02 + i * 0.5) * 12;
+            ctx.lineTo(x, y + yOff);
+        }
+        ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.shadowBlur = 40;
+        ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * 0.2})`;
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
     }
 }
