@@ -426,7 +426,8 @@ function startPreviewAnimation(screensaver) {
         pendulum: animatePendulum,
         retro: animateRetro,
         crystal: animateCrystal,
-        thunder: animateThunder
+        thunder: animateThunder,
+        sakura: animateSakura
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -567,6 +568,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'thunder':
             drawThunderPreview(ctx, w, h);
+            break;
+        case 'sakura':
+            drawSakuraPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1259,6 +1263,27 @@ function drawThunderPreview(ctx, w, h) {
     ctx.strokeStyle = 'rgba(200, 200, 255, 0.7)';
     ctx.lineWidth = 2;
     ctx.stroke();
+}
+
+function drawSakuraPreview(ctx, w, h) {
+    for (let i = 0; i < 20; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const size = 3 + Math.random() * 5;
+        const rotation = Math.random() * Math.PI * 2;
+        const hue = 330 + Math.random() * 30;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(size * 0.5, -size * 0.3, size, -size * 0.1, size, 0);
+        ctx.bezierCurveTo(size, size * 0.1, size * 0.5, size * 0.3, 0, 0);
+        ctx.fillStyle = `hsla(${hue}, 70%, 75%, 0.6)`;
+        ctx.fill();
+        ctx.restore();
+    }
 }
 
 function animateMatrix(ctx, w, h, t) {
@@ -2055,4 +2080,34 @@ function animateThunder(ctx, w, h, t) {
         ctx.fillStyle = 'rgba(100, 150, 255, 0.08)';
         ctx.fillRect(0, 0, w, h);
     }
+}
+
+function animateSakura(ctx, w, h, t) {
+    const petals = [];
+    for (let i = 0; i < 25; i++) {
+        const seed = i * 67.3;
+        petals.push({
+            x: (seed * 3.7 + t * 0.5 + Math.sin(t * 0.02 + seed) * 30) % (w + 20) - 10,
+            y: (seed * 2.3 + t * 0.8) % (h + 20) - 10,
+            size: 3 + (i % 3) * 2,
+            rotation: t * 0.02 + seed,
+            hue: 330 + (i * 3) % 30,
+            wobble: Math.sin(t * 0.02 + seed) * 15
+        });
+    }
+
+    petals.forEach(petal => {
+        ctx.save();
+        ctx.translate(petal.x + petal.wobble, petal.y);
+        ctx.rotate(petal.rotation);
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(petal.size * 0.5, -petal.size * 0.3, petal.size, -petal.size * 0.1, petal.size, 0);
+        ctx.bezierCurveTo(petal.size, petal.size * 0.1, petal.size * 0.5, petal.size * 0.3, 0, 0);
+        ctx.fillStyle = `hsla(${petal.hue}, 70%, 75%, 0.6)`;
+        ctx.fill();
+
+        ctx.restore();
+    });
 }

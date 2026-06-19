@@ -413,6 +413,15 @@
       "path": "screensavers/thunder/",
       "tags": ["thunder", "storm", "rain"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "sakura",
+      "name": "Sakura",
+      "description": "Лепестки сакуры, плывущие в ветру",
+      "preview": "images/previews/sakura.png",
+      "path": "screensavers/sakura/",
+      "tags": ["sakura", "petals", "spring"],
+      "technology": "canvas2d"
     }
   ]
 }
