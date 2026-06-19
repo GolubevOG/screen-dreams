@@ -418,7 +418,8 @@ function startPreviewAnimation(screensaver) {
         orbitclock: animateOrbitClock,
         starclock: animateStarClock,
         analogclock: animateAnalogClock,
-        forest: animateForest
+        forest: animateForest,
+        meteor: animateMeteor
     };
 
     const animateFn = previewFunctions[screensaver.id];
@@ -535,6 +536,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'forest':
             drawForestPreview(ctx, w, h);
+            break;
+        case 'meteor':
+            drawMeteorPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1016,6 +1020,32 @@ function drawForestPreview(ctx, w, h) {
         ctx.arc(x, y, 6, 0, Math.PI * 2);
         ctx.fillStyle = g;
         ctx.fill();
+    }
+}
+
+function drawMeteorPreview(ctx, w, h) {
+    for (let i = 0; i < 80; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        ctx.beginPath();
+        ctx.arc(x, y, Math.random() * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.5})`;
+        ctx.fill();
+    }
+    for (let i = 0; i < 3; i++) {
+        const sx = Math.random() * w;
+        const sy = Math.random() * h * 0.3;
+        const len = 40 + Math.random() * 60;
+        const angle = Math.PI * 0.35;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + Math.cos(angle) * len, sy + Math.sin(angle) * len);
+        const grad = ctx.createLinearGradient(sx, sy, sx + Math.cos(angle) * len, sy + Math.sin(angle) * len);
+        grad.addColorStop(0, 'rgba(255, 200, 100, 0.8)');
+        grad.addColorStop(1, 'transparent');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 }
 
@@ -1501,6 +1531,46 @@ function animateForest(ctx, w, h, t) {
         ctx.beginPath();
         ctx.arc(x, y, 5, 0, Math.PI * 2);
         ctx.fillStyle = g;
+        ctx.fill();
+    }
+}
+
+function animateMeteor(ctx, w, h, t) {
+    for (let i = 0; i < 60; i++) {
+        const x = (i * 17.3) % w;
+        const y = (i * 23.7) % h;
+        const alpha = 0.2 + Math.sin(t * 0.03 + i) * 0.2;
+        ctx.beginPath();
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fill();
+    }
+
+    for (let i = 0; i < 4; i++) {
+        const seed = i * 47.3;
+        const sx = (seed * 7.13 + t * 0.5) % (w + 100) - 50;
+        const sy = -10 + (t * 0.3 + seed) % (h * 0.4);
+        const len = 30 + (i % 3) * 20;
+        const angle = Math.PI * 0.35;
+        const ex = sx + Math.cos(angle) * len;
+        const ey = sy + Math.sin(angle) * len;
+
+        const grad = ctx.createLinearGradient(sx, sy, ex, ey);
+        grad.addColorStop(0, `rgba(255, 200, 100, ${0.8 - i * 0.1})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, 5);
+        glow.addColorStop(0, 'rgba(255, 200, 100, 0.6)');
+        glow.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
         ctx.fill();
     }
 }

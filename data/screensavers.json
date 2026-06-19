@@ -341,6 +341,15 @@
       "path": "screensavers/forest/",
       "tags": ["forest", "nature", "fog"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "meteor",
+      "name": "Meteor",
+      "description": "Метеоритный дождь в космосе с огненными хвостами",
+      "preview": "images/previews/meteor.png",
+      "path": "screensavers/meteor/",
+      "tags": ["meteor", "space", "flight"],
+      "technology": "canvas2d"
     }
   ]
 }
