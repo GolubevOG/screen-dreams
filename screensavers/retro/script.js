@@ -4,18 +4,25 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    initDrops();
 }
 window.addEventListener('resize', resize);
-resize();
 
 const pixelSize = 8;
-const columns = Math.floor(canvas.width / pixelSize);
-const drops = [];
-for (let i = 0; i < columns; i++) {
-    drops.push(Math.random() * canvas.height);
+let columns = 0;
+let drops = [];
+
+function initDrops() {
+    columns = Math.floor(canvas.width / pixelSize);
+    drops = new Array(columns);
+    for (let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * canvas.height;
+    }
 }
 
 const chars = '01アイウエオカキクケコ';
+
+resize();
 
 function animate() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';

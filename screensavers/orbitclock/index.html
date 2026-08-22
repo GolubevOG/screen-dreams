@@ -82,9 +82,9 @@
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            createStars();
         }
         window.addEventListener('resize', resize);
-        resize();
 
         const planets = [
             { name: 'Секунды', color: '#ff6b6b', radius: 80, speed: 6, size: 6, orbitWidth: 1 },
@@ -94,14 +94,20 @@
         ];
 
         const stars = [];
-        for (let i = 0; i < 200; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5,
-                brightness: Math.random()
-            });
+
+        function createStars() {
+            stars.length = 0;
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5,
+                    brightness: Math.random()
+                });
+            }
         }
+
+        resize();
 
         function draw() {
             ctx.fillStyle = '#000';

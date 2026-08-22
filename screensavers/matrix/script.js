@@ -4,21 +4,28 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    initDrops();
 }
 window.addEventListener('resize', resize);
-resize();
 
 const fontSize = 14;
-const columns = Math.floor(canvas.width / fontSize);
-const drops = [];
-const speeds = [];
+let columns = 0;
+let drops = [];
+let speeds = [];
 const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]|/<>?!@#$%^&*()';
 const charSets = {};
 
-for (let i = 0; i < columns; i++) {
-    drops[i] = Math.random() * -100;
-    speeds[i] = 0.5 + Math.random() * 1.5;
+function initDrops() {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns);
+    speeds = new Array(columns);
+    for (let i = 0; i < columns; i++) {
+        drops[i] = Math.random() * -100;
+        speeds[i] = 0.5 + Math.random() * 1.5;
+    }
 }
+
+resize();
 
 function getChar(col) {
     if (!charSets[col] || Math.random() > 0.95) {

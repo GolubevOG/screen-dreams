@@ -60,13 +60,12 @@
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            layoutDigits();
         }
         window.addEventListener('resize', resize);
-        resize();
 
         const particles = [];
         const gravity = 0.2;
-        const floor = canvas.height - 100;
 
         class Digit {
             constructor(x, y, char) {
@@ -131,6 +130,20 @@
             }
         }
 
+        function layoutDigits() {
+            if (!digitObjects.length) return;
+            const centerX = canvas.width / 2;
+            const spacing = 80;
+            const y = canvas.height / 2;
+
+            digitObjects.forEach((digit, i) => {
+                digit.x = centerX + (i - 3.5) * spacing;
+                digit.targetY = y;
+                if (digit.settled) digit.y = y;
+            });
+        }
+
+        resize();
         initDigits();
 
         function updateClock() {

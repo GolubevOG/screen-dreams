@@ -4,13 +4,14 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    pivotX = canvas.width / 2;
+    pivotY = canvas.height * 0.2;
+    length = Math.min(canvas.width, canvas.height) * 0.35;
 }
 window.addEventListener('resize', resize);
-resize();
 
-const pivotX = canvas.width / 2;
-const pivotY = canvas.height * 0.2;
-const length = Math.min(canvas.width, canvas.height) * 0.35;
+let pivotX, pivotY, length;
+resize();
 let angle = Math.PI / 4;
 let angularVel = 0;
 const gravity = 0.0005;

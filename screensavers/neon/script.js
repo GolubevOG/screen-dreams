@@ -4,9 +4,9 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    initLines();
 }
 window.addEventListener('resize', resize);
-resize();
 
 const neonColors = [
     [255, 0, 255],
@@ -17,15 +17,21 @@ const neonColors = [
 ];
 
 const lines = [];
-for (let i = 0; i < 12; i++) {
-    lines.push({
-        y: (i / 12) * canvas.height,
-        color: neonColors[i % neonColors.length],
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.01 + Math.random() * 0.02,
-        thickness: 2 + Math.random() * 3
-    });
+
+function initLines() {
+    lines.length = 0;
+    for (let i = 0; i < 12; i++) {
+        lines.push({
+            y: (i / 12) * canvas.height,
+            color: neonColors[i % neonColors.length],
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.01 + Math.random() * 0.02,
+            thickness: 2 + Math.random() * 3
+        });
+    }
 }
+
+resize();
 
 function animate() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
