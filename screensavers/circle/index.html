@@ -22,6 +22,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
+            width: var(--size);
+            height: var(--size);
             transform: translate(-50%, -50%);
             border-radius: 50%;
             border: 2px solid;
@@ -37,13 +39,6 @@
         .circle:nth-child(8) { --size: 450px; --duration: 24s; border-color: #00b894; animation-direction: reverse; }
         .circle:nth-child(9) { --size: 500px; --duration: 26s; border-color: #fdcb6e; }
         .circle:nth-child(10) { --size: 550px; --duration: 28s; border-color: #e17055; animation-direction: reverse; }
-
-        .circle {
-            width: var(--size);
-            height: var(--size);
-            margin-top: calc(var(--size) / -2);
-            margin-left: calc(var(--size) / -2);
-        }
 
         @keyframes rotate {
             from { transform: translate(-50%, -50%) rotate(0deg); }
