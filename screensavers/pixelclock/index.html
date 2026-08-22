@@ -194,28 +194,35 @@
             ':': [0,0,0,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,0,0,0]
         };
 
-        function createDigit(char) {
-            const container = document.createElement('div');
-            container.className = 'pixel-digit';
-            const pattern = digitPatterns[char];
-            for (let i = 0; i < 35; i++) {
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel' + (pattern[i] ? ' on' : '');
-                container.appendChild(pixel);
-            }
-            return container;
+        const timeSlots = [];
+
+        function buildClockDOM() {
+            const timeContainer = document.getElementById('pixelTime');
+            const layout = ['digit', 'digit', 'colon', 'digit', 'digit', 'colon', 'digit', 'digit'];
+
+            layout.forEach(type => {
+                const container = document.createElement('div');
+                container.className = type === 'colon' ? 'colon-container' : 'pixel-digit';
+
+                const pixels = [];
+                for (let i = 0; i < 35; i++) {
+                    const pixel = document.createElement('div');
+                    pixel.className = 'pixel';
+                    container.appendChild(pixel);
+                    pixels.push(pixel);
+                }
+
+                timeContainer.appendChild(container);
+                timeSlots.push(pixels);
+            });
         }
 
-        function createColon() {
-            const container = document.createElement('div');
-            container.className = 'colon-container';
-            const pattern = digitPatterns[':'];
+        function setSlot(index, char) {
+            const pattern = digitPatterns[char];
+            const pixels = timeSlots[index];
             for (let i = 0; i < 35; i++) {
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel' + (pattern[i] ? ' on' : '');
-                container.appendChild(pixel);
+                pixels[i].classList.toggle('on', pattern[i] === 1);
             }
-            return container;
         }
 
         function getTimeWords(hours, minutes) {
@@ -249,17 +256,12 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
 
-            const timeContainer = document.getElementById('pixelTime');
-            timeContainer.innerHTML = '';
-
-            timeContainer.appendChild(createDigit(hours[0]));
-            timeContainer.appendChild(createDigit(hours[1]));
-            timeContainer.appendChild(createColon());
-            timeContainer.appendChild(createDigit(minutes[0]));
-            timeContainer.appendChild(createDigit(minutes[1]));
-            timeContainer.appendChild(createColon());
-            timeContainer.appendChild(createDigit(seconds[0]));
-            timeContainer.appendChild(createDigit(seconds[1]));
+            setSlot(0, hours[0]);
+            setSlot(1, hours[1]);
+            setSlot(3, minutes[0]);
+            setSlot(4, minutes[1]);
+            setSlot(6, seconds[0]);
+            setSlot(7, seconds[1]);
 
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('date').textContent = now.toLocaleDateString('ru-RU', options);
@@ -270,6 +272,7 @@
             document.getElementById('timeWords').textContent = getTimeWords(hours, minutes);
         }
 
+        buildClockDOM();
         updateClock();
         setInterval(updateClock, 1000);
 
