@@ -409,6 +409,44 @@ function loadCanvasPreview(container, screensaver) {
     container._height = rect.height;
 }
 
+const PREVIEW_FUNCTIONS = {
+    matrix: animateMatrix,
+    particles: animateParticles,
+    starfield: animateStarfield,
+    snow: animateSnow,
+    rain: animateRain,
+    fire: animateFire,
+    nebula: animateNebula,
+    lava: animateLava,
+    ocean: animateOcean,
+    aurora: animateAurora,
+    plasma: animatePlasma,
+    dna: animateDNA,
+    bubbles: animateBubbles,
+    lightning: animateLightning,
+    waves: animateWaves,
+    fireflies: animateFireflies,
+    spiral: animateSpiral,
+    asteroid: animateAsteroid,
+    firework: animateFirework,
+    clock: animateClock,
+    butterfly: animateButterfly,
+    gravityclock: animateGravityClock,
+    orbitclock: animateOrbitClock,
+    starclock: animateStarClock,
+    analogclock: animateAnalogClock,
+    forest: animateForest,
+    meteor: animateMeteor,
+    waterfall: animateWaterfall,
+    neon: animateNeon,
+    geometric: animateGeometric,
+    pendulum: animatePendulum,
+    retro: animateRetro,
+    crystal: animateCrystal,
+    thunder: animateThunder,
+    sakura: animateSakura
+};
+
 function startPreviewAnimation(screensaver) {
     const container = document.getElementById(`preview-${screensaver.id}`);
     if (!container || !container._canvas) return;
@@ -421,45 +459,7 @@ function startPreviewAnimation(screensaver) {
     let lastFrame = 0;
     let time = 0;
 
-    const previewFunctions = {
-        matrix: animateMatrix,
-        particles: animateParticles,
-        starfield: animateStarfield,
-        snow: animateSnow,
-        rain: animateRain,
-        fire: animateFire,
-        nebula: animateNebula,
-        lava: animateLava,
-        ocean: animateOcean,
-        aurora: animateAurora,
-        plasma: animatePlasma,
-        dna: animateDNA,
-        bubbles: animateBubbles,
-        lightning: animateLightning,
-        waves: animateWaves,
-        fireflies: animateFireflies,
-        spiral: animateSpiral,
-        asteroid: animateAsteroid,
-        firework: animateFirework,
-        clock: animateClock,
-        butterfly: animateButterfly,
-        gravityclock: animateGravityClock,
-        orbitclock: animateOrbitClock,
-        starclock: animateStarClock,
-        analogclock: animateAnalogClock,
-        forest: animateForest,
-        meteor: animateMeteor,
-        waterfall: animateWaterfall,
-        neon: animateNeon,
-        geometric: animateGeometric,
-        pendulum: animatePendulum,
-        retro: animateRetro,
-        crystal: animateCrystal,
-        thunder: animateThunder,
-        sakura: animateSakura
-    };
-
-    const animateFn = previewFunctions[screensaver.id];
+    const animateFn = PREVIEW_FUNCTIONS[screensaver.id];
     if (!animateFn) return;
 
     function loop(timestamp) {
