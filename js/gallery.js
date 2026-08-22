@@ -5,6 +5,7 @@ let searchQuery = localStorage.getItem('screenDreamsSearch') || '';
 let showFavoritesOnly = localStorage.getItem('screenDreamsFavoritesOnly') === 'true';
 let favorites = JSON.parse(localStorage.getItem('screenDreamsFavorites') || '[]');
 const activeAnimations = new Map();
+let cardObserver = null;
 const FPS = 15;
 const FRAME_TIME = 1000 / FPS;
 let tooltip = null;
@@ -313,25 +314,43 @@ function createCard(screensaver) {
 }
 
 function setupLazyLoading() {
+    if (cardObserver) {
+        cardObserver.disconnect();
+    }
+
     const options = {
         root: null,
         rootMargin: '50px',
         threshold: 0.1
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    cardObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
+            const card = entry.target;
+            const screensaverId = card.getAttribute('data-screensaver');
+
             if (entry.isIntersecting) {
-                const card = entry.target;
-                const screensaverId = card.getAttribute('data-screensaver');
-                loadPreviewById(screensaverId);
-                observer.unobserve(card);
+                if (!card.dataset.loaded) {
+                    card.dataset.loaded = 'true';
+                    loadPreviewById(screensaverId);
+                } else if (card.dataset.previewType === 'iframe') {
+                    const screensaver = allScreensavers.find(s => s.id === screensaverId);
+                    const container = document.getElementById(`preview-${screensaverId}`);
+                    if (screensaver && container && !container.querySelector('iframe')) {
+                        loadCSSPreview(container, screensaver);
+                    }
+                }
+            } else if (card.dataset.loaded && card.dataset.previewType === 'iframe') {
+                const container = document.getElementById(`preview-${screensaverId}`);
+                if (container) {
+                    container.innerHTML = '<span class="card__preview-placeholder">Загрузка...</span>';
+                }
             }
         });
     }, options);
 
     document.querySelectorAll('.card').forEach(card => {
-        observer.observe(card);
+        cardObserver.observe(card);
     });
 }
 
@@ -346,7 +365,13 @@ function loadPreview(screensaver) {
     const container = document.getElementById(`preview-${screensaver.id}`);
     if (!container) return;
 
-    if (screensaver.technology === 'css' || screensaver.technology === 'html') {
+    const card = container.closest('.card');
+    const isDomBased = screensaver.technology === 'css' || screensaver.technology === 'html';
+    if (card) {
+        card.dataset.previewType = isDomBased ? 'iframe' : 'canvas';
+    }
+
+    if (isDomBased) {
         loadCSSPreview(container, screensaver);
     } else {
         loadCanvasPreview(container, screensaver);
