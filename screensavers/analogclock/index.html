@@ -221,6 +221,12 @@
         updateNumbers();
         window.addEventListener('resize', updateNumbers);
 
+        const hourHand = document.getElementById('hourHand');
+        const minuteHand = document.getElementById('minuteHand');
+        const secondHand = document.getElementById('secondHand');
+        const dateWindow = document.getElementById('dateWindow');
+        let lastShownDate = -1;
+
         function updateClock() {
             const now = new Date();
             const seconds = now.getSeconds();
@@ -232,15 +238,22 @@
             const minuteDeg = minutes * 6 + seconds * 0.1;
             const hourDeg = hours * 30 + minutes * 0.5;
 
-            document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
-            document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
-            document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
+            secondHand.style.transform = `rotate(${secondDeg}deg)`;
+            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+            hourHand.style.transform = `rotate(${hourDeg}deg)`;
 
-            document.getElementById('dateWindow').textContent = now.getDate();
+            if (now.getDate() !== lastShownDate) {
+                lastShownDate = now.getDate();
+                dateWindow.textContent = now.getDate();
+            }
         }
 
-        updateClock();
-        setInterval(updateClock, 50);
+        function animateLoop() {
+            updateClock();
+            requestAnimationFrame(animateLoop);
+        }
+
+        animateLoop();
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
