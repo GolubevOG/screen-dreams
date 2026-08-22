@@ -38,22 +38,14 @@ function draw() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    ctx.font = `${fontSize}px monospace`;
+    ctx.fillStyle = '#0f0';
+
     for (let i = 0; i < drops.length; i++) {
         const x = i * fontSize;
         const y = drops[i] * fontSize;
 
-        const gradient = ctx.createLinearGradient(x, y - fontSize * 5, x, y);
-        gradient.addColorStop(0, 'rgba(0, 255, 0, 0)');
-        gradient.addColorStop(0.5, 'rgba(0, 255, 0, 0.1)');
-        gradient.addColorStop(1, 'rgba(0, 255, 0, 0.8)');
-
-        ctx.fillStyle = gradient;
-        ctx.font = `${fontSize}px monospace`;
-
         const char = getChar(i);
-        ctx.fillText(char, x, y);
-
-        ctx.fillStyle = '#0f0';
         ctx.fillText(char, x, y);
 
         if (y > canvas.height && Math.random() > 0.975) {
@@ -73,7 +65,17 @@ function draw() {
     }
 }
 
-setInterval(draw, 33);
+let lastFrame = 0;
+
+function loop(timestamp) {
+    if (timestamp - lastFrame >= 33) {
+        lastFrame = timestamp;
+        draw();
+    }
+    requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
