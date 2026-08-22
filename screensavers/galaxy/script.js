@@ -3,7 +3,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 300;
@@ -13,8 +13,14 @@ scene.add(galaxyGroup);
 
 const arms = 4;
 const starsPerArm = 1000;
+const totalStars = arms * starsPerArm;
 const galaxyRadius = 200;
 
+const positions = new Float32Array(totalStars * 3);
+const colors = new Float32Array(totalStars * 3);
+const color = new THREE.Color();
+
+let idx = 0;
 for (let arm = 0; arm < arms; arm++) {
     const armAngle = (arm / arms) * Math.PI * 2;
 
@@ -23,19 +29,11 @@ for (let arm = 0; arm < arms; arm++) {
         const angle = armAngle + (distance / galaxyRadius) * Math.PI * 2;
         const spread = (Math.random() - 0.5) * 30 * (distance / galaxyRadius);
 
-        const x = Math.cos(angle) * distance;
-        const y = spread;
-        const z = Math.sin(angle) * distance;
-
-        const starsGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(3);
-        positions[0] = x;
-        positions[1] = y;
-        positions[2] = z;
-        starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        positions[idx * 3] = Math.cos(angle) * distance;
+        positions[idx * 3 + 1] = spread;
+        positions[idx * 3 + 2] = Math.sin(angle) * distance;
 
         const distanceFromCenter = distance / galaxyRadius;
-        const color = new THREE.Color();
         if (distanceFromCenter < 0.3) {
             color.setHSL(0.1, 0.8, 0.6 + Math.random() * 0.2);
         } else if (distanceFromCenter < 0.6) {
@@ -44,17 +42,27 @@ for (let arm = 0; arm < arms; arm++) {
             color.setHSL(0.7, 0.6, 0.4 + Math.random() * 0.4);
         }
 
-        const starsMaterial = new THREE.PointsMaterial({
-            size: 1 + Math.random() * 2,
-            color: color,
-            transparent: true,
-            opacity: 0.6 + Math.random() * 0.4
-        });
+        const brightness = 0.6 + Math.random() * 0.4;
+        colors[idx * 3] = color.r * brightness;
+        colors[idx * 3 + 1] = color.g * brightness;
+        colors[idx * 3 + 2] = color.b * brightness;
 
-        const star = new THREE.Points(starsGeometry, starsMaterial);
-        galaxyGroup.add(star);
+        idx++;
     }
 }
+
+const starsGeometry = new THREE.BufferGeometry();
+starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+starsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const starsMaterial = new THREE.PointsMaterial({
+    size: 2,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.9
+});
+
+galaxyGroup.add(new THREE.Points(starsGeometry, starsMaterial));
 
 const coreGeometry = new THREE.SphereGeometry(15, 32, 32);
 const coreMaterial = new THREE.MeshBasicMaterial({
