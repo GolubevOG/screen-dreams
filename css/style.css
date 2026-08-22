@@ -215,17 +215,6 @@ body {
     font-size: 0.9rem;
 }
 
-.card__info {
-    padding: 16px 20px;
-}
-
-.card__name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #fff;
-}
-
 .card__description {
     font-size: 0.85rem;
     color: #777;
@@ -336,9 +325,7 @@ body {
     cursor: help;
     border-bottom: 1px dashed #333;
     display: inline-block;
-}
-
-@media (max-width: 768px) {
+}@media (max-width: 768px) {
     .header__title {
         font-size: 2rem;
     }
