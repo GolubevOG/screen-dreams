@@ -4,9 +4,9 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    buildGradients();
 }
 window.addEventListener('resize', resize);
-resize();
 
 let time = 0;
 const waves = [];
@@ -20,6 +20,25 @@ for (let i = 0; i < 8; i++) {
         hue: 180 + i * 20
     });
 }
+
+let waveGradients = [];
+let glowGradient = null;
+
+function buildGradients() {
+    waveGradients = waves.map(wave => {
+        const g = ctx.createLinearGradient(0, canvas.height / 2 - wave.amplitude, 0, canvas.height / 2 + wave.amplitude);
+        g.addColorStop(0, `hsla(${wave.hue}, 70%, 50%, 0)`);
+        g.addColorStop(0.5, `hsla(${wave.hue}, 70%, 50%, 0.3)`);
+        g.addColorStop(1, `hsla(${wave.hue}, 70%, 50%, 0)`);
+        return g;
+    });
+
+    glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 50);
+    glowGradient.addColorStop(0, 'rgba(0, 200, 255, 0.3)');
+    glowGradient.addColorStop(1, 'transparent');
+}
+
+resize();
 
 function draw() {
     ctx.fillStyle = 'rgba(10, 10, 26, 0.05)';
@@ -36,12 +55,7 @@ function draw() {
             ctx.lineTo(x, y);
         }
 
-        const gradient = ctx.createLinearGradient(0, canvas.height / 2 - wave.amplitude, 0, canvas.height / 2 + wave.amplitude);
-        gradient.addColorStop(0, `hsla(${wave.hue}, 70%, 50%, 0)`);
-        gradient.addColorStop(0.5, `hsla(${wave.hue}, 70%, 50%, 0.3)`);
-        gradient.addColorStop(1, `hsla(${wave.hue}, 70%, 50%, 0)`);
-
-        ctx.strokeStyle = gradient;
+        ctx.strokeStyle = waveGradients[index];
         ctx.lineWidth = 2;
         ctx.stroke();
     });
@@ -50,14 +64,13 @@ function draw() {
         const x = (Math.sin(time * 0.01 + i * 2) * 0.3 + 0.5) * canvas.width;
         const y = canvas.height / 2 + Math.sin(time * 0.02 + i) * 50;
 
-        const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 50);
-        glowGradient.addColorStop(0, 'rgba(0, 200, 255, 0.3)');
-        glowGradient.addColorStop(1, 'transparent');
-
+        ctx.save();
+        ctx.translate(x, y);
         ctx.beginPath();
-        ctx.arc(x, y, 50, 0, Math.PI * 2);
+        ctx.arc(0, 0, 50, 0, Math.PI * 2);
         ctx.fillStyle = glowGradient;
         ctx.fill();
+        ctx.restore();
     }
 
     time++;

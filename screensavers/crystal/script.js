@@ -22,6 +22,12 @@ for (let i = 0; i < 8; i++) {
     });
 }
 
+crystals.forEach(crystal => {
+    crystal.glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, crystal.size);
+    crystal.glowGradient.addColorStop(0, `hsla(${crystal.hue}, 60%, 80%, 0.2)`);
+    crystal.glowGradient.addColorStop(1, 'transparent');
+});
+
 function drawCrystal(crystal, shimmerAlpha) {
     ctx.save();
     ctx.translate(crystal.x, crystal.y);
@@ -42,11 +48,10 @@ function drawCrystal(crystal, shimmerAlpha) {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, crystal.size);
-    grad.addColorStop(0, `hsla(${crystal.hue}, 60%, 80%, ${0.1 + shimmerAlpha * 0.1})`);
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
+    ctx.fillStyle = crystal.glowGradient;
+    ctx.globalAlpha = 0.5 + shimmerAlpha * 0.5;
     ctx.fill();
+    ctx.globalAlpha = 1;
 
     ctx.restore();
 }

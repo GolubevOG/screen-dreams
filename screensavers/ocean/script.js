@@ -1,9 +1,16 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+let bgGradient = null;
+
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    bgGradient.addColorStop(0, '#001a33');
+    bgGradient.addColorStop(0.5, '#003366');
+    bgGradient.addColorStop(1, '#004080');
 }
 window.addEventListener('resize', resize);
 resize();
@@ -34,11 +41,6 @@ for (let i = 0; i < 50; i++) {
 }
 
 function draw() {
-    // Градиентный фон
-    const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    bgGradient.addColorStop(0, '#001a33');
-    bgGradient.addColorStop(0.5, '#003366');
-    bgGradient.addColorStop(1, '#004080');
     ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 

@@ -19,6 +19,11 @@ class Firefly {
         this.speedY = (Math.random() - 0.5) * 0.5;
         this.glow = Math.random() * Math.PI * 2;
         this.glowSpeed = 0.02 + Math.random() * 0.03;
+
+        this.gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size * 4);
+        this.gradient.addColorStop(0, 'rgba(255, 255, 100, 0.8)');
+        this.gradient.addColorStop(0.5, 'rgba(255, 255, 0, 0.3)');
+        this.gradient.addColorStop(1, 'transparent');
     }
 
     update() {
@@ -33,20 +38,22 @@ class Firefly {
     draw() {
         const alpha = (Math.sin(this.glow) + 1) / 2;
 
-        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-        gradient.addColorStop(0, `rgba(255, 255, 100, ${alpha * 0.8})`);
-        gradient.addColorStop(0.5, `rgba(255, 255, 0, ${alpha * 0.3})`);
-        gradient.addColorStop(1, 'transparent');
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.globalAlpha = alpha;
 
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
+        ctx.arc(0, 0, this.size * 4, 0, Math.PI * 2);
+        ctx.fillStyle = this.gradient;
         ctx.fill();
 
+        ctx.fillStyle = 'rgb(255, 255, 200)';
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 200, ${alpha})`;
+        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.globalAlpha = 1;
+        ctx.restore();
     }
 }
 

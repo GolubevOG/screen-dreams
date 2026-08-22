@@ -4,7 +4,14 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    const poolY = canvas.height * 0.78;
+    poolGrad = ctx.createLinearGradient(0, poolY, 0, canvas.height);
+    poolGrad.addColorStop(0, 'rgba(0, 50, 100, 0.5)');
+    poolGrad.addColorStop(1, 'rgba(0, 20, 50, 0.8)');
 }
+
+let poolGrad = null;
 window.addEventListener('resize', resize);
 resize();
 
@@ -20,6 +27,13 @@ for (let i = 0; i < 150; i++) {
         width: 1 + Math.random() * 2
     });
 }
+
+drops.forEach(drop => {
+    drop.gradient = ctx.createLinearGradient(0, 0, 0, drop.length);
+    drop.gradient.addColorStop(0, 'rgba(100, 180, 255, 0.1)');
+    drop.gradient.addColorStop(0.5, 'rgba(150, 200, 255, 0.6)');
+    drop.gradient.addColorStop(1, 'rgba(200, 230, 255, 0.3)');
+});
 
 function createSplash(x, y) {
     for (let i = 0; i < 5; i++) {
@@ -52,16 +66,15 @@ function animate() {
             drop.x = canvas.width * 0.4 + Math.random() * canvas.width * 0.2;
         }
 
-        const grad = ctx.createLinearGradient(drop.x, drop.y, drop.x, drop.y + drop.length);
-        grad.addColorStop(0, 'rgba(100, 180, 255, 0.1)');
-        grad.addColorStop(0.5, 'rgba(150, 200, 255, 0.6)');
-        grad.addColorStop(1, 'rgba(200, 230, 255, 0.3)');
+        ctx.save();
+        ctx.translate(drop.x, drop.y);
         ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x, drop.y + drop.length);
-        ctx.strokeStyle = grad;
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, drop.length);
+        ctx.strokeStyle = drop.gradient;
         ctx.lineWidth = drop.width;
         ctx.stroke();
+        ctx.restore();
     });
 
     for (let i = splashes.length - 1; i >= 0; i--) {
@@ -83,9 +96,6 @@ function animate() {
     }
 
     const poolY = canvas.height * 0.78;
-    const poolGrad = ctx.createLinearGradient(0, poolY, 0, canvas.height);
-    poolGrad.addColorStop(0, 'rgba(0, 50, 100, 0.5)');
-    poolGrad.addColorStop(1, 'rgba(0, 20, 50, 0.8)');
     ctx.fillStyle = poolGrad;
     ctx.fillRect(0, poolY, canvas.width, canvas.height - poolY);
 

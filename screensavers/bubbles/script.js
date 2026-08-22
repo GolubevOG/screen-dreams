@@ -25,6 +25,18 @@ class Bubble {
         this.wobbleSpeed = 0.02 + Math.random() * 0.03;
         this.hue = Math.random() * 60 + 180;
         this.alpha = 0.3 + Math.random() * 0.4;
+
+        this.gradient = ctx.createRadialGradient(
+            -this.radius * 0.3,
+            -this.radius * 0.3,
+            0,
+            0,
+            0,
+            this.radius
+        );
+        this.gradient.addColorStop(0, `hsla(${this.hue}, 70%, 80%, ${this.alpha * 0.8})`);
+        this.gradient.addColorStop(0.5, `hsla(${this.hue}, 60%, 60%, ${this.alpha * 0.4})`);
+        this.gradient.addColorStop(1, `hsla(${this.hue}, 50%, 50%, 0)`);
     }
 
     update() {
@@ -39,26 +51,15 @@ class Bubble {
 
     draw() {
         ctx.save();
-
-        const gradient = ctx.createRadialGradient(
-            this.x - this.radius * 0.3,
-            this.y - this.radius * 0.3,
-            0,
-            this.x,
-            this.y,
-            this.radius
-        );
-        gradient.addColorStop(0, `hsla(${this.hue}, 70%, 80%, ${this.alpha * 0.8})`);
-        gradient.addColorStop(0.5, `hsla(${this.hue}, 60%, 60%, ${this.alpha * 0.4})`);
-        gradient.addColorStop(1, `hsla(${this.hue}, 50%, 50%, 0)`);
+        ctx.translate(this.x, this.y);
 
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.gradient;
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.2, 0, Math.PI * 2);
+        ctx.arc(-this.radius * 0.3, -this.radius * 0.3, this.radius * 0.2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.8})`;
         ctx.fill();
 
