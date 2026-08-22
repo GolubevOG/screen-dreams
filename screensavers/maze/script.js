@@ -4,9 +4,9 @@ const ctx = canvas.getContext('2d');
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    init();
 }
 window.addEventListener('resize', resize);
-resize();
 
 const cellSize = 20;
 let cols, rows;
@@ -16,8 +16,10 @@ let current;
 let generationComplete = false;
 let pathTrail = [];
 let time = 0;
+let generation = 0;
 
 function init() {
+    generation++;
     cols = Math.floor(canvas.width / cellSize);
     rows = Math.floor(canvas.height / cellSize);
     maze = [];
@@ -91,14 +93,18 @@ function generateMaze() {
 }
 
 function animatePath() {
+    const gen = generation;
     if (pathTrail.length < maze.length) {
         const unvisited = maze.filter(c => !pathTrail.includes(c));
         if (unvisited.length > 0) {
             pathTrail.push(unvisited[0]);
-            setTimeout(animatePath, 10);
+            setTimeout(() => {
+                if (gen === generation) animatePath();
+            }, 10);
         }
     } else {
         setTimeout(() => {
+            if (gen !== generation) return;
             pathTrail = [];
             init();
         }, 3000);
@@ -146,7 +152,7 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-init();
+resize();
 draw();
 
 function toggleFullscreen() {
