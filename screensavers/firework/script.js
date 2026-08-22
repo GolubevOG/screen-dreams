@@ -12,6 +12,11 @@ const fireworks = [];
 const particles = [];
 const colors = ['#ff0066', '#00ff66', '#6600ff', '#ffff00', '#00ffff', '#ff6600', '#ff00ff'];
 
+function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255);
+}
+
 class Firework {
     constructor() {
         this.x = Math.random() * canvas.width;
@@ -19,6 +24,7 @@ class Firework {
         this.targetY = 100 + Math.random() * (canvas.height * 0.4);
         this.speed = 5 + Math.random() * 5;
         this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.rgb = hexToRgb(this.color);
         this.trail = [];
     }
 
@@ -39,7 +45,7 @@ class Firework {
         this.trail.forEach((point, i) => {
             ctx.beginPath();
             ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
-            ctx.fillStyle = this.color.replace(')', `, ${i / this.trail.length})`).replace('rgb', 'rgba');
+            ctx.fillStyle = `rgba(${this.rgb}, ${i / this.trail.length})`;
             ctx.fill();
         });
 
@@ -53,18 +59,18 @@ class Firework {
         for (let i = 0; i < 80; i++) {
             const angle = (i / 80) * Math.PI * 2;
             const speed = 2 + Math.random() * 4;
-            particles.push(new Particle(this.x, this.y, angle, speed, this.color));
+            particles.push(new Particle(this.x, this.y, angle, speed, this.rgb));
         }
     }
 }
 
 class Particle {
-    constructor(x, y, angle, speed, color) {
+    constructor(x, y, angle, speed, rgb) {
         this.x = x;
         this.y = y;
         this.vx = Math.cos(angle) * speed;
         this.vy = Math.sin(angle) * speed;
-        this.color = color;
+        this.rgb = rgb;
         this.alpha = 1;
         this.decay = 0.01 + Math.random() * 0.02;
         this.size = 2 + Math.random() * 2;
@@ -80,7 +86,7 @@ class Particle {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color.replace(')', `, ${this.alpha})`).replace('rgb', 'rgba');
+        ctx.fillStyle = `rgba(${this.rgb}, ${Math.max(this.alpha, 0)})`;
         ctx.fill();
     }
 
@@ -89,11 +95,14 @@ class Particle {
     }
 }
 
-setInterval(() => {
-    fireworks.push(new Firework());
-}, 800);
+let lastSpawn = 0;
 
-function draw() {
+function draw(timestamp) {
+    if (timestamp - lastSpawn >= 800) {
+        fireworks.push(new Firework());
+        lastSpawn = timestamp;
+    }
+
     ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -116,7 +125,7 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-draw();
+draw(0);
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
