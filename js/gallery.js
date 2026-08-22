@@ -246,6 +246,10 @@ function openRandom() {
 
 function renderGallery(screensavers) {
     const gallery = document.getElementById('gallery');
+
+    activeAnimations.forEach(animId => cancelAnimationFrame(animId));
+    activeAnimations.clear();
+
     gallery.innerHTML = '';
 
     if (screensavers.length === 0) {
