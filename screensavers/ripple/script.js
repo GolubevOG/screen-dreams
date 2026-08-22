@@ -11,6 +11,11 @@ resize();
 const ripples = [];
 const colors = ['#64c8ff', '#ff64c8', '#64ff64', '#ffff64', '#ff6464'];
 
+function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255);
+}
+
 class Ripple {
     constructor(x, y) {
         this.x = x;
@@ -19,6 +24,7 @@ class Ripple {
         this.maxRadius = 200 + Math.random() * 200;
         this.speed = 2 + Math.random() * 2;
         this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.rgb = hexToRgb(this.color);
         this.alpha = 0.8;
     }
 
@@ -30,7 +36,7 @@ class Ripple {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = this.color.replace(')', `, ${this.alpha})`).replace('rgb', 'rgba');
+        ctx.strokeStyle = `rgba(${this.rgb}, ${this.alpha})`;
         ctx.lineWidth = 2;
         ctx.stroke();
     }
@@ -50,11 +56,14 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
-setInterval(() => {
-    ripples.push(new Ripple(Math.random() * canvas.width, Math.random() * canvas.height));
-}, 2000);
+let lastSpawn = 0;
 
-function draw() {
+function draw(timestamp) {
+    if (timestamp - lastSpawn >= 2000) {
+        ripples.push(new Ripple(Math.random() * canvas.width, Math.random() * canvas.height));
+        lastSpawn = timestamp;
+    }
+
     ctx.fillStyle = 'rgba(10, 10, 26, 0.1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -69,7 +78,7 @@ function draw() {
     requestAnimationFrame(draw);
 }
 
-draw();
+draw(0);
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
