@@ -12,20 +12,30 @@ window.addEventListener('resize', resize);
 
 let pivotX, pivotY, length;
 resize();
+
 let angle = Math.PI / 4;
 let angularVel = 0;
-const gravity = 0.0005;
-const damping = 0.999;
-const trail = [];
+const gravity = 1.8;
+const dampingRate = 0.06;
+let lastTimestamp = null;
 
-function animate() {
+function animate(timestamp) {
+    if (lastTimestamp === null) {
+        lastTimestamp = timestamp;
+    }
+    let dt = (timestamp - lastTimestamp) / 1000;
+    lastTimestamp = timestamp;
+    if (dt > 0.05) {
+        dt = 0.05;
+    }
+
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const acc = -gravity * Math.sin(angle);
-    angularVel += acc;
-    angularVel *= damping;
-    angle += angularVel;
+    angularVel += acc * dt;
+    angularVel *= Math.exp(-dampingRate * dt);
+    angle += angularVel * dt;
 
     const bobX = pivotX + Math.sin(angle) * length;
     const bobY = pivotY + Math.cos(angle) * length;
@@ -70,7 +80,7 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-animate();
+requestAnimationFrame(animate);
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
