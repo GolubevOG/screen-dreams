@@ -450,7 +450,8 @@ const PREVIEW_FUNCTIONS = {
     mystify: animateMystify,
     boids: animateBoids,
     life: animateLife,
-    sand: animateSand
+    sand: animateSand,
+    flowfield: animateFlowfield
 };
 
 function startPreviewAnimation(screensaver) {
@@ -624,6 +625,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'sand':
             drawSandPreview(ctx, w, h);
+            break;
+        case 'flowfield':
+            drawFlowfieldPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1578,6 +1582,37 @@ function drawSandPreview(ctx, w, h) {
 
 function animateSand(ctx, w, h, t) {
     drawSandPiles(ctx, w, h, t);
+}
+
+function drawFlowfieldStreams(ctx, w, h, t) {
+    const steps = 7;
+    ctx.lineWidth = 1.3;
+
+    for (let i = 0; i < 70; i++) {
+        let x = hashRand(i * 3.1 + w * 0.01) * w;
+        let y = hashRand(i * 7.7 + h * 0.02) * h;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        for (let s = 0; s < steps; s++) {
+            const a =
+                Math.sin(x * 0.01 + t * 0.001) * 2 +
+                Math.cos(y * 0.011 - t * 0.0008) * 2;
+            x += Math.cos(a) * 6;
+            y += Math.sin(a) * 6;
+            ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `hsla(${(i * 5 + t * 0.05) % 360}, 85%, 62%, 0.65)`;
+        ctx.stroke();
+    }
+}
+
+function drawFlowfieldPreview(ctx, w, h) {
+    drawFlowfieldStreams(ctx, w, h, (w + h) * 20);
+}
+
+function animateFlowfield(ctx, w, h, t) {
+    drawFlowfieldStreams(ctx, w, h, t * 8);
 }
 
 function animateMatrix(ctx, w, h, t) {

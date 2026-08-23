@@ -476,6 +476,15 @@
       "path": "screensavers/sand/",
       "tags": ["sand", "interactive", "physics"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "flowfield",
+      "name": "Flow Field",
+      "description": "Генеративный арт: сотни частиц движутся по невидимому полю потоков, рисуя светящиеся линии тока",
+      "preview": "images/previews/flowfield.png",
+      "path": "screensavers/flowfield/",
+      "tags": ["flowfield", "particles", "noise"],
+      "technology": "canvas2d"
     }
   ]
 }
