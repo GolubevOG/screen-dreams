@@ -451,7 +451,8 @@ const PREVIEW_FUNCTIONS = {
     boids: animateBoids,
     life: animateLife,
     sand: animateSand,
-    flowfield: animateFlowfield
+    flowfield: animateFlowfield,
+    donut: animateDonut
 };
 
 function startPreviewAnimation(screensaver) {
@@ -628,6 +629,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'flowfield':
             drawFlowfieldPreview(ctx, w, h);
+            break;
+        case 'donut':
+            drawDonutPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1613,6 +1617,36 @@ function drawFlowfieldPreview(ctx, w, h) {
 
 function animateFlowfield(ctx, w, h, t) {
     drawFlowfieldStreams(ctx, w, h, t * 8);
+}
+
+const DONUT_CHARS = '.,-~:;=!*#@';
+
+function drawDonutPreview(ctx, w, h, t) {
+    ctx.font = '11px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const scale = Math.min(w, h) / 46;
+
+    for (let k = 0; k < 260; k++) {
+        const ang = k * 0.28 + t * 0.03;
+        const band = (Math.sin(k * 0.13 + t * 0.05) + 1) / 2;
+        const r = (14 + band * 22) * scale;
+        const x = cx + Math.cos(ang) * r * 1.35;
+        const y = cy + Math.sin(ang) * r * 0.75;
+
+        if (Math.abs(x - cx) > w / 2 - 8 || Math.abs(y - cy) > h / 2 - 8) continue;
+
+        const ci = Math.floor(band * (DONUT_CHARS.length - 1));
+        ctx.fillStyle = `rgba(${60 + ci * 15}, ${200}, ${110}, ${0.3 + band * 0.7})`;
+        ctx.fillText(DONUT_CHARS[ci], x, y);
+    }
+}
+
+function animateDonut(ctx, w, h, t) {
+    drawDonutPreview(ctx, w, h, t);
 }
 
 function animateMatrix(ctx, w, h, t) {

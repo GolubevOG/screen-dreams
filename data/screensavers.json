@@ -485,6 +485,15 @@
       "path": "screensavers/flowfield/",
       "tags": ["flowfield", "particles", "noise"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "donut",
+      "name": "Donut",
+      "description": "Легендарный вращающийся ASCII-пончик по мотивам donut.c. Трёхмерная фигура из символов с настоящим z-буфером",
+      "preview": "images/previews/donut.png",
+      "path": "screensavers/donut/",
+      "tags": ["donut", "ascii", "retro"],
+      "technology": "canvas2d"
     }
   ]
 }
