@@ -449,6 +449,15 @@
       "path": "screensavers/mystify/",
       "tags": ["mystify", "classic", "lines"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "boids",
+      "name": "Boids",
+      "description": "Стая птиц по алгоритму Крейга Рейнольдса: разделение, выравнивание и сплочение. Живая симуляция роения",
+      "preview": "images/previews/boids.png",
+      "path": "screensavers/boids/",
+      "tags": ["boids", "birds", "simulation"],
+      "technology": "canvas2d"
     }
   ]
 }

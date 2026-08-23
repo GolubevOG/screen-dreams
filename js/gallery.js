@@ -447,7 +447,8 @@ const PREVIEW_FUNCTIONS = {
     sakura: animateSakura,
     dvd: animateDvd,
     pipes: animatePipes,
-    mystify: animateMystify
+    mystify: animateMystify,
+    boids: animateBoids
 };
 
 function startPreviewAnimation(screensaver) {
@@ -612,6 +613,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'mystify':
             drawMystifyPreview(ctx, w, h);
+            break;
+        case 'boids':
+            drawBoidsPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1459,6 +1463,46 @@ function animateMystify(ctx, w, h, t) {
         drawMystifyPolyline(ctx, w, h, t - i * 6, t * 0.4 % 360);
         drawMystifyPolyline(ctx, w, h, t - i * 6 + 55, (t * 0.4 + 140) % 360);
         ctx.globalAlpha = 1;
+    }
+}
+
+function drawBoidTriangle(ctx, x, y, angle, size, hue) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(size, 0);
+    ctx.lineTo(-size * 0.65, size * 0.5);
+    ctx.lineTo(-size * 0.38, 0);
+    ctx.lineTo(-size * 0.65, -size * 0.5);
+    ctx.closePath();
+    ctx.fillStyle = `hsl(${hue}, 85%, 62%)`;
+    ctx.fill();
+    ctx.restore();
+}
+
+function drawBoidsPreview(ctx, w, h) {
+    const cx = w / 2;
+    const cy = h / 2;
+    for (let i = 0; i < 26; i++) {
+        const a = (w + h) * 0.01 + i * 0.42;
+        const r = (0.18 + 0.13 * Math.sin(i * 1.7)) * Math.min(w, h);
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a * 1.2 + i) * r * 0.7;
+        drawBoidTriangle(ctx, x, y, a + Math.PI / 2, 8, 190 + i * 4);
+    }
+}
+
+function animateBoids(ctx, w, h, t) {
+    const cx = w / 2;
+    const cy = h / 2;
+    for (let i = 0; i < 30; i++) {
+        const a = t * 0.02 + i * 0.38;
+        const r = (0.16 + 0.14 * Math.sin(t * 0.008 + i * 1.3)) * Math.min(w, h);
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a * 1.15 + i * 0.5) * r * 0.72;
+        const heading = a + Math.PI / 2 + Math.sin(t * 0.05 + i) * 0.2;
+        drawBoidTriangle(ctx, x, y, heading, 9, 190 + ((i * 9) % 110));
     }
 }
 
