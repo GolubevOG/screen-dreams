@@ -494,6 +494,15 @@
       "path": "screensavers/donut/",
       "tags": ["donut", "ascii", "retro"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "fractaltree",
+      "name": "Fractal Tree",
+      "description": "Живое фрактальное дерево: рекурсивные ветви глубиной 9 уровней качаются от виртуального ветра, на концах — розовые листья",
+      "preview": "images/previews/fractaltree.png",
+      "path": "screensavers/fractaltree/",
+      "tags": ["tree", "fractal", "nature"],
+      "technology": "canvas2d"
     }
   ]
 }

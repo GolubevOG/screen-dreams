@@ -452,7 +452,8 @@ const PREVIEW_FUNCTIONS = {
     life: animateLife,
     sand: animateSand,
     flowfield: animateFlowfield,
-    donut: animateDonut
+    donut: animateDonut,
+    fractaltree: animateFractalTree
 };
 
 function startPreviewAnimation(screensaver) {
@@ -632,6 +633,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'donut':
             drawDonutPreview(ctx, w, h);
+            break;
+        case 'fractaltree':
+            drawFractalTreePreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1647,6 +1651,64 @@ function drawDonutPreview(ctx, w, h, t) {
 
 function animateDonut(ctx, w, h, t) {
     drawDonutPreview(ctx, w, h, t);
+}
+
+function treeBranch(ctx, x, y, angle, len, width, depth, wind) {
+    if (depth === 0 || len < 2) return;
+
+    const nx = x + Math.cos(angle) * len;
+    const ny = y + Math.sin(angle) * len;
+
+    ctx.strokeStyle = `hsl(${24 + (8 - depth) * 14}, 45%, ${20 + (8 - depth) * 6}%)`;
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(nx, ny);
+    ctx.stroke();
+
+    if (depth <= 1) {
+        ctx.fillStyle = ((nx * 7 + ny * 13) | 0) % 2 ? 'hsla(340, 75%, 68%, 0.9)' : 'hsla(110, 70%, 60%, 0.9)';
+        ctx.beginPath();
+        ctx.arc(nx, ny, 1.8 + Math.abs(wind), 0, Math.PI * 2);
+        ctx.fill();
+        return;
+    }
+
+    const spread = 0.44;
+    treeBranch(ctx, nx, ny, angle - spread + wind * 0.05, len * 0.72, width * 0.7, depth - 1, wind);
+    treeBranch(ctx, nx, ny, angle + spread + wind * 0.05, len * 0.72, width * 0.7, depth - 1, wind);
+}
+
+function drawFractalTreePreview(ctx, w, h) {
+    const t = (w * 3 + h) * 0.01;
+    const wind = Math.sin(t) * 0.5 + Math.sin(t * 2.7) * 0.25;
+
+    treeBranch(
+        ctx,
+        w / 2,
+        h - 6,
+        -Math.PI / 2 + wind * 0.04,
+        Math.min(h, w) * 0.19,
+        5,
+        7,
+        wind
+    );
+}
+
+function animateFractalTree(ctx, w, h, t) {
+    const wind = Math.sin(t * 0.008) * 0.6 + Math.sin(t * 0.0021) * 0.35;
+
+    treeBranch(
+        ctx,
+        w / 2,
+        h - 4,
+        -Math.PI / 2 + wind * 0.05,
+        Math.min(h, w) * 0.2,
+        6,
+        8,
+        wind
+    );
 }
 
 function animateMatrix(ctx, w, h, t) {
