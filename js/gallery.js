@@ -448,7 +448,8 @@ const PREVIEW_FUNCTIONS = {
     dvd: animateDvd,
     pipes: animatePipes,
     mystify: animateMystify,
-    boids: animateBoids
+    boids: animateBoids,
+    life: animateLife
 };
 
 function startPreviewAnimation(screensaver) {
@@ -616,6 +617,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'boids':
             drawBoidsPreview(ctx, w, h);
+            break;
+        case 'life':
+            drawLifePreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1504,6 +1508,33 @@ function animateBoids(ctx, w, h, t) {
         const heading = a + Math.PI / 2 + Math.sin(t * 0.05 + i) * 0.2;
         drawBoidTriangle(ctx, x, y, heading, 9, 190 + ((i * 9) % 110));
     }
+}
+
+function drawLifeGrid(ctx, w, h, gen) {
+    const cell = 10;
+    const cols = Math.ceil(w / cell);
+    const rows = Math.ceil(h / cell);
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const seed = x * 91.7 + y * 137.3;
+            const stable = hashRand(seed) < 0.12;
+            const alive = stable || hashRand(seed * 1.7 + gen * 13.9) < 0.14;
+            if (alive) {
+                const fresh = !stable && hashRand(seed + gen) > 0.8;
+                ctx.fillStyle = fresh ? 'rgb(190,255,170)' : `hsl(${150 + (x + y) % 40}, 70%, ${45 + (x % 3) * 6}%)`;
+                ctx.fillRect(x * cell, y * cell, cell - 1, cell - 1);
+            }
+        }
+    }
+}
+
+function drawLifePreview(ctx, w, h) {
+    drawLifeGrid(ctx, w, h, Math.floor(w * 2.7));
+}
+
+function animateLife(ctx, w, h, t) {
+    drawLifeGrid(ctx, w, h, Math.floor(t / 5));
 }
 
 function animateMatrix(ctx, w, h, t) {

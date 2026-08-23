@@ -458,6 +458,15 @@
       "path": "screensavers/boids/",
       "tags": ["boids", "birds", "simulation"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "life",
+      "name": "Game of Life",
+      "description": "Клеточный автомат Конвея. Колонии рождаются, живут и погибают по трём простым правилам, а новые клетки светятся зелёным",
+      "preview": "images/previews/life.png",
+      "path": "screensavers/life/",
+      "tags": ["life", "cells", "simulation"],
+      "technology": "canvas2d"
     }
   ]
 }
