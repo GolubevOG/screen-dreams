@@ -12,10 +12,10 @@ let tooltip = null;
 
 const CATEGORY_TAG_MAP = {
     '🌌 Космос': ['space', '3d', 'stars', 'galaxy', 'nebula', 'aurora', 'asteroid', 'meteor'],
-    '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies', 'forest', 'waterfall', 'thunder', 'sakura'],
-    '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti', 'neon', 'geometric', 'retro', 'crystal'],
+    '🌊 Природа': ['snow', 'rain', 'fire', 'lava', 'ocean', 'lightning', 'bubbles', 'butterfly', 'fireflies', 'forest', 'waterfall', 'thunder', 'sakura', 'boids', 'life', 'tree'],
+    '🎨 Абстракция': ['particles', 'plasma', 'gradient', 'waves', 'circle', 'pulse', 'spiral', 'ripple', 'confetti', 'neon', 'geometric', 'retro', 'crystal', 'flowfield', 'mystify', 'pipes', 'donut'],
     '⏰ Часы': ['clock', 'flip', 'moon', 'pixel', 'gravity', 'orbit', 'time', 'analog', 'star'],
-    '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework', 'pendulum']
+    '🔬 Интерактив': ['interactive', 'mouse', 'click', 'maze', 'disco', 'firework', 'pendulum', 'sand', 'pong', 'dvd']
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
