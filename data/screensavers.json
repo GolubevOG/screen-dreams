@@ -467,6 +467,15 @@
       "path": "screensavers/life/",
       "tags": ["life", "cells", "simulation"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "sand",
+      "name": "Falling Sand",
+      "description": "Физическая песочница: сыпьте песок мышью и смотрите, как песчинки стекают в горки. Автоматические источники работают сами",
+      "preview": "images/previews/sand.png",
+      "path": "screensavers/sand/",
+      "tags": ["sand", "interactive", "physics"],
+      "technology": "canvas2d"
     }
   ]
 }

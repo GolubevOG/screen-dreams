@@ -449,7 +449,8 @@ const PREVIEW_FUNCTIONS = {
     pipes: animatePipes,
     mystify: animateMystify,
     boids: animateBoids,
-    life: animateLife
+    life: animateLife,
+    sand: animateSand
 };
 
 function startPreviewAnimation(screensaver) {
@@ -620,6 +621,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'life':
             drawLifePreview(ctx, w, h);
+            break;
+        case 'sand':
+            drawSandPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1535,6 +1539,45 @@ function drawLifePreview(ctx, w, h) {
 
 function animateLife(ctx, w, h, t) {
     drawLifeGrid(ctx, w, h, Math.floor(t / 5));
+}
+
+const SAND_COLORS = ['#e8cf96', '#cfae74', '#b08c55'];
+
+function drawSandPiles(ctx, w, h, t) {
+    const cell = 4;
+    const cols = Math.ceil(w / cell);
+    const rows = Math.ceil(h / cell);
+
+    for (let x = 0; x < cols; x++) {
+        const hill =
+            Math.max(0, Math.sin(x * 0.05 + w * 0.01) * 22 - 4) +
+            Math.max(0, Math.sin(x * 0.013 + h * 0.03) * 30);
+        const top = h - 12 - hill;
+        for (let y = Math.floor(top / cell); y < rows; y++) {
+            const shade = (x + y + ((t / 40) | 0)) % 3;
+            ctx.fillStyle = SAND_COLORS[shade];
+            ctx.fillRect(x * cell, y * cell, cell, cell);
+        }
+    }
+
+    const ex = (Math.sin(t * 0.008) * 0.5 + 0.5) * w;
+    const egx = Math.floor(ex / cell);
+    const fallH = Math.floor(t % 26);
+    ctx.fillStyle = SAND_COLORS[0];
+    for (let k = 0; k < 5; k++) {
+        const gy = fallH + k * 9;
+        if (gy < h - 20) {
+            ctx.fillRect((egx + (k % 2)) * cell, gy * cell, cell, cell);
+        }
+    }
+}
+
+function drawSandPreview(ctx, w, h) {
+    drawSandPiles(ctx, w, h, w * 1.7);
+}
+
+function animateSand(ctx, w, h, t) {
+    drawSandPiles(ctx, w, h, t);
 }
 
 function animateMatrix(ctx, w, h, t) {
