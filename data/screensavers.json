@@ -440,6 +440,15 @@
       "path": "screensavers/pipes/",
       "tags": ["pipes", "classic", "abstract"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "mystify",
+      "name": "Mystify",
+      "description": "Mystify из классических заставок Windows. Разноцветные ломаные летают по экрану, оставляя светящиеся хвосты траекторий",
+      "preview": "images/previews/mystify.png",
+      "path": "screensavers/mystify/",
+      "tags": ["mystify", "classic", "lines"],
+      "technology": "canvas2d"
     }
   ]
 }

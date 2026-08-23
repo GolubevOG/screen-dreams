@@ -446,7 +446,8 @@ const PREVIEW_FUNCTIONS = {
     thunder: animateThunder,
     sakura: animateSakura,
     dvd: animateDvd,
-    pipes: animatePipes
+    pipes: animatePipes,
+    mystify: animateMystify
 };
 
 function startPreviewAnimation(screensaver) {
@@ -608,6 +609,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'pipes':
             drawPipesPreview(ctx, w, h);
+            break;
+        case 'mystify':
+            drawMystifyPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1417,6 +1421,45 @@ function animatePipes(ctx, w, h, t) {
     const phase = Math.floor(t / 90);
     drawPipesPath(ctx, w, h, phase * 17.31 + 5, (phase * 63) % 360);
     drawPipesPath(ctx, w, h, phase * 41.77 + 91, (phase * 63 + 150) % 360);
+}
+
+function drawMystifyPolyline(ctx, w, h, t, hue) {
+    const pts = [];
+    for (let k = 0; k < 4; k++) {
+        pts.push({
+            x: (Math.sin(t * 0.031 + k * 2.4 + hue) * 0.5 + 0.5) * w,
+            y: (Math.cos(t * 0.024 + k * 1.7 + hue * 0.1) * 0.5 + 0.5) * h
+        });
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let k = 1; k < 4; k++) {
+        ctx.lineTo(pts[k].x, pts[k].y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = `hsla(${hue}, 90%, 60%, 0.9)`;
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+}
+
+function drawMystifyPreview(ctx, w, h) {
+    for (let i = 7; i >= 0; i--) {
+        const fade = 1 - i / 8;
+        ctx.globalAlpha = fade;
+        drawMystifyPolyline(ctx, w, h, w * 3 - i * 6, (h * 2) % 360);
+        drawMystifyPolyline(ctx, w, h, w * 3 - i * 6 + 40, (h * 2 + 130) % 360);
+        ctx.globalAlpha = 1;
+    }
+}
+
+function animateMystify(ctx, w, h, t) {
+    for (let i = 7; i >= 0; i--) {
+        ctx.globalAlpha = 1 - i / 9;
+        drawMystifyPolyline(ctx, w, h, t - i * 6, t * 0.4 % 360);
+        drawMystifyPolyline(ctx, w, h, t - i * 6 + 55, (t * 0.4 + 140) % 360);
+        ctx.globalAlpha = 1;
+    }
 }
 
 function animateMatrix(ctx, w, h, t) {
