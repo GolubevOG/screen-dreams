@@ -453,7 +453,8 @@ const PREVIEW_FUNCTIONS = {
     sand: animateSand,
     flowfield: animateFlowfield,
     donut: animateDonut,
-    fractaltree: animateFractalTree
+    fractaltree: animateFractalTree,
+    pong: animatePong
 };
 
 function startPreviewAnimation(screensaver) {
@@ -636,6 +637,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'fractaltree':
             drawFractalTreePreview(ctx, w, h);
+            break;
+        case 'pong':
+            drawPongPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1709,6 +1713,46 @@ function animateFractalTree(ctx, w, h, t) {
         8,
         wind
     );
+}
+
+function drawPongScene(ctx, w, h, t) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([12, 10]);
+    ctx.beginPath();
+    ctx.moveTo(w / 2, 0);
+    ctx.lineTo(w / 2, h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const margin = w * 0.045;
+    const padW = Math.max(8, w * 0.016);
+    const padH = h * 0.24;
+
+    const leftY = (Math.sin(t * 0.031 + 1.2) * 0.5 + 0.5) * (h - padH) + padH / 2;
+    const rightY = (Math.sin(t * 0.027 + 4.1) * 0.5 + 0.5) * (h - padH) + padH / 2;
+
+    ctx.fillStyle = '#4ecdc4';
+    ctx.fillRect(margin, leftY - padH / 2, padW, padH);
+
+    ctx.fillStyle = '#ff6b9d';
+    ctx.fillRect(w - margin - padW, rightY - padH / 2, padW, padH);
+
+    let bx = (t * 4.2) % ((w - 40) * 2);
+    if (bx > w - 40) bx = (w - 40) * 2 - bx;
+    bx += 20;
+    const by = (Math.sin(t * 0.043) * 0.5 + 0.5) * (h - 30) + 15;
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(bx - 5, by - 5, 10, 10);
+}
+
+function drawPongPreview(ctx, w, h) {
+    drawPongScene(ctx, w, h, (w + h) * 1.9);
+}
+
+function animatePong(ctx, w, h, t) {
+    drawPongScene(ctx, w, h, t * 6);
 }
 
 function animateMatrix(ctx, w, h, t) {

@@ -503,6 +503,15 @@
       "path": "screensavers/fractaltree/",
       "tags": ["tree", "fractal", "nature"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "pong",
+      "name": "Pong",
+      "description": "Ретро-теннис 1972 года: ИИ против ИИ. Ракетки ошибаются, мяч ускоряется, счёт идёт до 11 очков",
+      "preview": "images/previews/pong.png",
+      "path": "screensavers/pong/",
+      "tags": ["pong", "game", "retro"],
+      "technology": "canvas2d"
     }
   ]
 }
