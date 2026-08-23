@@ -431,6 +431,15 @@
       "path": "screensavers/dvd/",
       "tags": ["dvd", "retro", "bounce"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "pipes",
+      "name": "Pipes",
+      "description": "Классические 3D-трубы из заставки Windows 95. Цветные трубопроводы растут по сетке с фланцами на стыках",
+      "preview": "images/previews/pipes.png",
+      "path": "screensavers/pipes/",
+      "tags": ["pipes", "classic", "abstract"],
+      "technology": "canvas2d"
     }
   ]
 }

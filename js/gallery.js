@@ -445,7 +445,8 @@ const PREVIEW_FUNCTIONS = {
     crystal: animateCrystal,
     thunder: animateThunder,
     sakura: animateSakura,
-    dvd: animateDvd
+    dvd: animateDvd,
+    pipes: animatePipes
 };
 
 function startPreviewAnimation(screensaver) {
@@ -604,6 +605,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'dvd':
             drawDvdPreview(ctx, w, h);
+            break;
+        case 'pipes':
+            drawPipesPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1355,6 +1359,64 @@ function animateDvd(ctx, w, h, t) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('DVD', px + lw / 2, py + lh / 2);
+}
+
+function hashRand(n) {
+    return (Math.sin(n * 127.1 + 311.7) * 43758.5453) % 1;
+}
+
+function drawPipesPath(ctx, w, h, seed, hueBase) {
+    const cell = w / 8;
+    let x = cell + Math.floor(hashRand(seed) * 7) * cell;
+    let y = cell + Math.floor(hashRand(seed + 1) * 4) * cell;
+    const dirs = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    let dir = Math.floor(hashRand(seed + 2) * 4);
+
+    ctx.lineWidth = Math.max(6, cell * 0.28);
+    ctx.lineCap = 'butt';
+
+    for (let seg = 0; seg < 9; seg++) {
+        const hue = (hueBase + seg * 25) % 360;
+        ctx.strokeStyle = `hsl(${hue}, 70%, 50%)`;
+
+        const len = cell * (1 + Math.floor(hashRand(seed + seg * 3) * 2));
+        const nx = x + dirs[dir][0] * len;
+        const ny = y + dirs[dir][1] * len;
+
+        if (nx < 0 || nx > w || ny < 0 || ny > h) {
+            dir = (dir + 1) % 4;
+            continue;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(nx, ny);
+        ctx.stroke();
+
+        ctx.fillStyle = `hsl(${hue}, 70%, 32%)`;
+        ctx.beginPath();
+        ctx.arc(nx, ny, ctx.lineWidth / 2 + 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = `hsl(${hue}, 70%, 65%)`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.lineWidth = Math.max(6, cell * 0.28);
+
+        x = nx;
+        y = ny;
+        dir = hashRand(seed + seg * 7) > 0.55 ? (dir + 1) % 4 : dir;
+    }
+}
+
+function drawPipesPreview(ctx, w, h) {
+    drawPipesPath(ctx, w, h, w * 0.13 + h * 0.07, (w * 3) % 360);
+    drawPipesPath(ctx, w, h, w * 0.29 + h * 0.11, (w * 3 + 140) % 360);
+}
+
+function animatePipes(ctx, w, h, t) {
+    const phase = Math.floor(t / 90);
+    drawPipesPath(ctx, w, h, phase * 17.31 + 5, (phase * 63) % 360);
+    drawPipesPath(ctx, w, h, phase * 41.77 + 91, (phase * 63 + 150) % 360);
 }
 
 function animateMatrix(ctx, w, h, t) {
