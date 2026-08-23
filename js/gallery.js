@@ -444,7 +444,8 @@ const PREVIEW_FUNCTIONS = {
     retro: animateRetro,
     crystal: animateCrystal,
     thunder: animateThunder,
-    sakura: animateSakura
+    sakura: animateSakura,
+    dvd: animateDvd
 };
 
 function startPreviewAnimation(screensaver) {
@@ -600,6 +601,9 @@ function drawPreview(ctx, w, h, id) {
             break;
         case 'sakura':
             drawSakuraPreview(ctx, w, h);
+            break;
+        case 'dvd':
+            drawDvdPreview(ctx, w, h);
             break;
         default:
             drawDefaultPreview(ctx, w, h, id);
@@ -1313,6 +1317,44 @@ function drawSakuraPreview(ctx, w, h) {
         ctx.fill();
         ctx.restore();
     }
+}
+
+function drawDvdPreview(ctx, w, h) {
+    const lw = w * 0.36;
+    const lh = lw * 0.56;
+    const x = (Math.sin(w * 12.9898 + h * 78.233) * 0.5 + 0.5) * (w - lw);
+    const y = (Math.sin(h * 37.719 + w * 11.135) * 0.5 + 0.5) * (h - lh);
+    const hue = (w * 13 + h * 7) % 360;
+
+    ctx.fillStyle = `hsl(${hue}, 75%, 52%)`;
+    ctx.fillRect(x, y, lw, lh);
+    ctx.fillStyle = '#fff';
+    ctx.font = `italic bold ${lh * 0.45}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('DVD', x + lw / 2, y + lh / 2);
+}
+
+function animateDvd(ctx, w, h, t) {
+    const lw = w * 0.36;
+    const lh = lw * 0.56;
+    const rangeX = Math.max(1, w - lw);
+    const rangeY = Math.max(1, h - lh);
+    let px = (t * 3) % (rangeX * 2);
+    if (px > rangeX) px = rangeX * 2 - px;
+    let py = (t * 2) % (rangeY * 2);
+    if (py > rangeY) py = rangeY * 2 - py;
+
+    const hue = (t * 4) % 360;
+
+    ctx.fillStyle = `hsl(${hue}, 75%, 52%)`;
+    ctx.fillRect(px, py, lw, lh);
+
+    ctx.fillStyle = '#fff';
+    ctx.font = `italic bold ${lh * 0.45}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('DVD', px + lw / 2, py + lh / 2);
 }
 
 function animateMatrix(ctx, w, h, t) {

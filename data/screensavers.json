@@ -422,6 +422,15 @@
       "path": "screensavers/sakura/",
       "tags": ["sakura", "petals", "spring"],
       "technology": "canvas2d"
+    },
+    {
+      "id": "dvd",
+      "name": "DVD",
+      "description": "Летающий логотип DVD из знаменитой заставки-мема. Отскакивает от краёв, меняет цвет и считает попадания в угол",
+      "preview": "images/previews/dvd.png",
+      "path": "screensavers/dvd/",
+      "tags": ["dvd", "retro", "bounce"],
+      "technology": "canvas2d"
     }
   ]
 }
